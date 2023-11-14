@@ -2,6 +2,7 @@ package cs2043group10;
 
 import java.util.Vector;
 
+import cs2043group10.data.LoginClass;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -45,6 +46,8 @@ public class Main extends Application implements IReversableManager {
 		logoutButton = new Button("Logout");
 		logoutButton.setOnAction(this::logoutEvent);
 		logoutButton.setDisable(true);
+		Button refreshButton = new Button("\u21bb");
+		refreshButton.setOnAction(this::refreshEvent);
 		currentNodeTitle = new Text("");
 		auxiliaryText = new Text("");
 		databaseManager = new DatabaseManager(this);
@@ -56,15 +59,17 @@ public class Main extends Application implements IReversableManager {
 		GridPane.setHalignment(logoutButton, HPos.RIGHT);
 		GridPane.setHgrow(currentNodeTitle, Priority.ALWAYS);
 		GridPane.setValignment(currentNodeTitle, VPos.CENTER);
-		primaryPane.addRow(0, homeButton, backwardsButton, forwardsButton, currentNodeTitle, auxiliaryText, logoutButton);
+		primaryPane.addRow(0, homeButton, backwardsButton, forwardsButton, refreshButton, currentNodeTitle, auxiliaryText, logoutButton);
 		
 		currentNodeTitle.setText("Login");
 		loginPrompt = new LoginPrompt(databaseManager, this::login);
-		primaryPane.add(loginPrompt.getNode(), 0, 1, 6, 1);
+		loginPrompt.beforeShow();
+		primaryPane.add(loginPrompt.getNode(), 0, 1, 7, 1);
 		
 		Scene scene = new Scene(primaryPane, 500, 400);
 		stage.setScene(scene);
 		stage.show();
+		loginPrompt.afterShow();
 	}
 
 	@Override
@@ -78,10 +83,12 @@ public class Main extends Application implements IReversableManager {
 		forwardsButton.setDisable(true);
 		currentNodeTitle.setText(newNode.getTitle());
 		IReversable oldNode = nodeStack.get(currentNodeIndex - 1);
+		oldNode.beforeHide();
 		primaryPane.getChildren().remove(oldNode.getNode());
-		oldNode.onHide();
-		newNode.onShow();
-		primaryPane.add(newNode.getNode(), 0, 1, 6, 1);
+		oldNode.afterHide();
+		newNode.beforeShow();
+		primaryPane.add(newNode.getNode(), 0, 1, 7, 1);
+		newNode.afterShow();
 	}
 
 	@Override
@@ -90,23 +97,32 @@ public class Main extends Application implements IReversableManager {
 	}
 	
 	private void login() {
+		IReversable homeView;
+		try {
+			homeView = databaseManager.instantiateHomeView();
+		} catch (DatabaseException e) {
+			e.display();
+			return;
+		}
+		loginPrompt.beforeHide();
 		primaryPane.getChildren().remove(loginPrompt.getNode());
-		loginPrompt.onHide();
+		loginPrompt.afterHide();
 		currentNodeIndex = 0;
-		//IReversable homeView = new HomeView(this);
 		homeButton.setDisable(false);
 		logoutButton.setDisable(false);
-		//currentNodeTitle.setText(homeView.getTitle());
+		currentNodeTitle.setText(homeView.getTitle());
 		auxiliaryText.setText("Logged in as " + databaseManager.getName());
-		//nodeStack.add(homeView);
-		//homeView.onShow();
-		//primaryPane.add(homeView.getNode(), 0, 6, 1, 1);
+		nodeStack.add(homeView);
+		homeView.beforeShow();
+		primaryPane.add(homeView.getNode(), 0, 1, 7, 1);
+		homeView.afterShow();
 	}
 	
 	private void logoutEvent(ActionEvent event) {
 		IReversable oldNode = nodeStack.get(currentNodeIndex);
+		oldNode.beforeHide();
 		primaryPane.getChildren().remove(oldNode.getNode());
-		oldNode.onHide();
+		oldNode.afterHide();
 		for (int i = nodeStack.size() - 1; i >= 0; --i) {
 			nodeStack.get(i).destroy();
 		}
@@ -118,22 +134,29 @@ public class Main extends Application implements IReversableManager {
 		auxiliaryText.setText("");
 		currentNodeTitle.setText("Login");
 		databaseManager.logout();
-		loginPrompt.onShow();
-		primaryPane.add(loginPrompt.getNode(), 0, 1, 6, 1);
+		loginPrompt.beforeShow();
+		primaryPane.add(loginPrompt.getNode(), 0, 1, 7, 1);
+		loginPrompt.afterShow();
 	}
 	
 	private void homeEvent(ActionEvent event) {
-		//pushNewNode(new HomeView(this));
+		try {
+			pushNewNode(databaseManager.instantiateHomeView());
+		} catch (DatabaseException e) {
+			e.display();
+		}
 	}
 	
 	private void historyEvent(ActionEvent event) {
 		if (event.getSource() == backwardsButton) {
 			IReversable oldNode = nodeStack.get(currentNodeIndex);
+			oldNode.beforeHide();
 			primaryPane.getChildren().remove(oldNode.getNode());
-			oldNode.onHide();
+			oldNode.afterHide();
 			IReversable newNode = nodeStack.get(--currentNodeIndex);
-			newNode.onShow();
-			primaryPane.add(newNode.getNode(), 0, 1, 6, 1);
+			newNode.beforeShow();
+			primaryPane.add(newNode.getNode(), 0, 1, 7, 1);
+			newNode.afterShow();
 			if (currentNodeIndex == 0) {
 				backwardsButton.setDisable(true);
 			}
@@ -141,11 +164,13 @@ public class Main extends Application implements IReversableManager {
 			currentNodeTitle.setText(newNode.getTitle());
 		} else {
 			IReversable oldNode = nodeStack.get(currentNodeIndex);
+			oldNode.beforeHide();
 			primaryPane.getChildren().remove(oldNode.getNode());
-			oldNode.onHide();
+			oldNode.afterHide();
 			IReversable newNode = nodeStack.get(++currentNodeIndex);
-			newNode.onShow();
-			primaryPane.add(newNode.getNode(), 0, 1, 6, 1);
+			newNode.beforeShow();
+			primaryPane.add(newNode.getNode(), 0, 1, 7, 1);
+			newNode.afterShow();
 			if (currentNodeIndex == nodeStack.size() - 1) {
 				forwardsButton.setDisable(true);
 			}
@@ -174,13 +199,15 @@ public class Main extends Application implements IReversableManager {
 			throw new RuntimeException();
 		}
 		IReversable oldNode = nodeStack.get(currentNodeIndex);
+		oldNode.beforeHide();
 		primaryPane.getChildren().remove(oldNode.getNode());
-		oldNode.onHide();
+		oldNode.afterHide();
 		oldNode.destroy();
 		nodeStack.setSize(currentNodeIndex--);
 		IReversable newNode = nodeStack.get(currentNodeIndex);
-		newNode.onShow();
-		primaryPane.add(newNode.getNode(), 0, 1, 6, 1);
+		newNode.beforeShow();
+		primaryPane.add(newNode.getNode(), 0, 1, 7, 1);
+		newNode.afterShow();
 		currentNodeTitle.setText(newNode.getTitle());
 		if (currentNodeIndex == 0) {
 			backwardsButton.setDisable(true);
@@ -193,17 +220,27 @@ public class Main extends Application implements IReversableManager {
 			throw new RuntimeException();
 		}
 		IReversable oldNode = nodeStack.get(currentNodeIndex);
+		oldNode.beforeHide();
 		primaryPane.getChildren().remove(oldNode.getNode());
-		oldNode.onHide();
+		oldNode.afterHide();
 		oldNode.destroy();
 		nodeStack.set(currentNodeIndex, newTop);
-		newTop.onShow();
-		primaryPane.add(newTop.getNode(), 0, 1, 6, 1);
+		newTop.beforeShow();
+		primaryPane.add(newTop.getNode(), 0, 1, 7, 1);
+		newTop.afterShow();
 		currentNodeTitle.setText(newTop.getTitle());
 	}
 	
 	@Override
 	public boolean isAtTop(IReversable node) {
 		return nodeStack.lastElement() == node;
+	}
+	
+	private void refreshEvent(ActionEvent event) {
+		if (databaseManager.getLoginClass() == LoginClass.NOT_LOGGED_IN) {
+			loginPrompt.refresh();
+		} else {
+			nodeStack.get(currentNodeIndex).refresh();
+		}
 	}
 }

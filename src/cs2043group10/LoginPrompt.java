@@ -62,7 +62,7 @@ public class LoginPrompt implements IReversable {
 	}
 
 	@Override
-	public void onShow() {
+	public void beforeShow() {
 		idField.setText("");
 		passwordField.setText("");
 		idField.setOnAction(this::loginEvent);
@@ -71,7 +71,7 @@ public class LoginPrompt implements IReversable {
 	}
 
 	@Override
-	public void onHide() {
+	public void afterHide() {
 	}
 
 	@Override
@@ -109,4 +109,20 @@ public class LoginPrompt implements IReversable {
 			break;
 		}
 	}
+	
+	@Override
+	public void refresh() {
+		idField.setText("");
+		message.setText("");
+		passwordField.setText("");
+		idField.requestFocus();
+	}
+
+	@Override
+	public void afterShow() {
+		idField.requestFocus();
+	}
+
+	@Override
+	public void beforeHide() {}
 }
