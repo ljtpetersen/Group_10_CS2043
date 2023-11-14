@@ -5,7 +5,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="spikes/revnav/src"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="/home1/ugrads/w9kng/javafx-sdk-21.0.1/lib/javafx.base.jar">
 		<attributes>
