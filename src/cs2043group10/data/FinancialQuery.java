@@ -1,36 +1,41 @@
 package cs2043group10.data;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class FinancialQuery implements IQuery<FinancialQuery.FinancialEntry> {
 	public final int patientId;
-	private final FinancialEntry[] entries;
+	private final HashMap<Integer, FinancialEntry> entries;
 	
 	public FinancialQuery(int patientId, FinancialEntry[] entries) {
 		this.patientId = patientId;
-		this.entries = entries;
-	}
-	
-	@Override
-	public void sortBy(Comparator<FinancialEntry> comparator) {
-		Arrays.sort(entries, comparator);
+		this.entries = new HashMap<Integer, FinancialEntry>(entries.length);
+		for (FinancialEntry entry : entries) {
+			this.entries.put(entry.documentId, entry);
+		}
 	}
 	
 	@Override
 	public int getEntryCount() {
-		return entries.length;
+		return entries.size();
 	}
 	
 	@Override
 	public IQuery<FinancialEntry> filter(Predicate<FinancialEntry> pred) {
-		return new FinancialQuery(patientId, Arrays.stream(entries).filter(pred).toArray(FinancialEntry[]::new));
+		return new FinancialQuery(patientId, entries.values().stream().filter(pred).toArray(FinancialEntry[]::new));
 	}
 	
 	@Override
-	public FinancialEntry get(int index) {
-		return entries[index];
+	public FinancialEntry get(int id) {
+		return entries.get(id);
+	}
+	
+	@Override
+	public Collection<FinancialEntry> getEntries() {
+		return entries.values();
 	}
 	
 	public static class FinancialEntry {

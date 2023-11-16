@@ -1,33 +1,37 @@
 package cs2043group10.data;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class PatientQuery implements IQuery<PatientQuery.PatientEntry> {
-	private final PatientEntry[] patients;
+	private final HashMap<Integer, PatientEntry> patients;
 	
 	public PatientQuery(PatientEntry[] patients) {
-		this.patients = patients;
+		this.patients = new HashMap<Integer, PatientEntry>(patients.length);
+		for (PatientEntry entry : patients) {
+			this.patients.put(entry.id, entry);
+		}
 	}
 	
 	@Override
 	public int getEntryCount() {
-		return patients.length;
+		return patients.size();
 	}
 	
 	@Override
-	public PatientEntry get(int index) {
-		return patients[index];
+	public PatientEntry get(int id) {
+		return patients.get(id);
 	}
 	
 	@Override
-	public void sortBy(Comparator<PatientEntry> cmp) {
-		Arrays.sort(patients, cmp);
-	}
-	
 	public IQuery<PatientEntry> filter(Predicate<PatientEntry> pred) {
-		return new PatientQuery(Arrays.stream(patients).filter(pred).toArray(PatientEntry[]::new));
+		return new PatientQuery(patients.values().stream().filter(pred).toArray(PatientEntry[]::new));
+	}
+	
+	@Override
+	public Collection<PatientEntry> getEntries() {
+		return patients.values();
 	}
 	
 	public static class PatientEntry {

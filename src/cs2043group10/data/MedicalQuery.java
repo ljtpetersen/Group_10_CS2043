@@ -1,36 +1,39 @@
 package cs2043group10.data;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 public class MedicalQuery implements IQuery<MedicalQuery.MedicalEntry> {
 	public final int patientId;
-	private final MedicalEntry[] entries;
+	private final HashMap<Integer, MedicalEntry> entries;
 	
 	public MedicalQuery(int patientId, MedicalEntry[] entries) {
 		this.patientId = patientId;
-		this.entries = entries;
+		this.entries = new HashMap<Integer, MedicalEntry>(entries.length);
+		for (MedicalEntry entry : entries) {
+			this.entries.put(entry.documentId, entry);
+		}
 	}
-	
-	@Override
-	public void sortBy(Comparator<MedicalEntry> comparator) {
-		Arrays.sort(entries, comparator);
-	}
-	
+		
 	@Override
 	public int getEntryCount() {
-		return entries.length;
+		return entries.size();
 	}
 	
 	@Override
 	public IQuery<MedicalEntry> filter(Predicate<MedicalEntry> pred) {
-		return new MedicalQuery(patientId, Arrays.stream(entries).filter(pred).toArray(MedicalEntry[]::new));
+		return new MedicalQuery(patientId, entries.values().stream().filter(pred).toArray(MedicalEntry[]::new));
 	}
 	
 	@Override
-	public MedicalEntry get(int index) {
-		return entries[index];
+	public MedicalEntry get(int id) {
+		return entries.get(id);
+	}
+	
+	@Override
+	public Collection<MedicalEntry> getEntries() {
+		return entries.values();
 	}
 	
 	public static class MedicalEntry {
