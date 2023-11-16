@@ -53,7 +53,8 @@ public class Main extends Application implements IReversableManager {
 		currentNodeTitle = new Text("");
 		auxiliaryText = new Text("");
 		
-		databaseManager = new DatabaseManager(this);
+		//databaseManager = new DatabaseManager(this);
+		databaseManager = new TestDatabaseManager(this);
 		
 		primaryPane.setHgap(4);
 		primaryPane.setVgap(8);
