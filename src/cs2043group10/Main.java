@@ -3,6 +3,7 @@ package cs2043group10;
 import java.util.Vector;
 
 import cs2043group10.data.LoginClass;
+import cs2043group10.test.TestDatabaseManager;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
@@ -25,7 +26,7 @@ public class Main extends Application implements IReversableManager {
 	private Button logoutButton;
 	private Text currentNodeTitle;
 	private Text auxiliaryText;
-	private DatabaseManager databaseManager;
+	private IDatabase databaseManager;
 	private IReversable loginPrompt;
 	
 	@Override
@@ -51,6 +52,7 @@ public class Main extends Application implements IReversableManager {
 		refreshButton.setOnAction(this::refreshEvent);
 		currentNodeTitle = new Text("");
 		auxiliaryText = new Text("");
+		
 		databaseManager = new DatabaseManager(this);
 		
 		primaryPane.setHgap(4);
@@ -71,7 +73,7 @@ public class Main extends Application implements IReversableManager {
 		primaryPane.addRow(0, homeButton, backwardsButton, forwardsButton, refreshButton, currentNodeTitle, auxiliaryText, logoutButton);
 		
 		currentNodeTitle.setText("Login");
-		loginPrompt = new LoginPrompt(databaseManager, this::login);
+		loginPrompt = new LoginPrompt(this, this::login);
 		loginPrompt.beforeShow();
 		primaryPane.add(loginPrompt.getNode(), 0, 1, 7, 1);
 		
@@ -101,7 +103,7 @@ public class Main extends Application implements IReversableManager {
 	}
 
 	@Override
-	public DatabaseManager getDatabaseManager() {
+	public IDatabase getDatabaseManager() {
 		return databaseManager;
 	}
 	

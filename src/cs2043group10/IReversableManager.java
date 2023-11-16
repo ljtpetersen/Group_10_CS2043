@@ -2,7 +2,7 @@ package cs2043group10;
 
 public interface IReversableManager {
 	public void pushNewNode(IReversable newNode);
-	public DatabaseManager getDatabaseManager();
+	public IDatabase getDatabaseManager();
 	public void goBackwards();
 	public void goForwards();
 	public void popNode();

@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class LoginPrompt implements IReversable {
-	private DatabaseManager databaseManager;
+	private IReversableManager manager;
 	private Runnable loginMethod;
 	private static TextField idField;
 	private static PasswordField passwordField;
@@ -24,8 +24,8 @@ public class LoginPrompt implements IReversable {
 	private static Text message;
 	private static Button loginButton;
 
-	public LoginPrompt(DatabaseManager databaseManager, Runnable loginMethod) {
-		this.databaseManager = databaseManager;
+	public LoginPrompt(IReversableManager manager, Runnable loginMethod) {
+		this.manager = manager;
 		this.loginMethod = loginMethod;
 		if (loginNode == null) {
 			createNode();
@@ -93,7 +93,7 @@ public class LoginPrompt implements IReversable {
 
 		LoginClass loginClass;
 		try {
-			loginClass = databaseManager.tryLogin(id, passwordField.getText());
+			loginClass = manager.getDatabaseManager().tryLogin(id, passwordField.getText());
 		} catch (DatabaseException e) {
 			message.setText("Database Exception: " + e.getMessage());
 			return;
