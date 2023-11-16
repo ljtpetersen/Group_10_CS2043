@@ -2,7 +2,6 @@ package cs2043group10.data;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 public class MedicalQuery implements IQuery<MedicalQuery.MedicalEntry> {
 	public final int patientId;
@@ -20,12 +19,7 @@ public class MedicalQuery implements IQuery<MedicalQuery.MedicalEntry> {
 	public int getEntryCount() {
 		return entries.size();
 	}
-	
-	@Override
-	public IQuery<MedicalEntry> filter(Predicate<MedicalEntry> pred) {
-		return new MedicalQuery(patientId, entries.values().stream().filter(pred).toArray(MedicalEntry[]::new));
-	}
-	
+		
 	@Override
 	public MedicalEntry get(int id) {
 		return entries.get(id);

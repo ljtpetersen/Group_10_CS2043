@@ -1,10 +1,7 @@
 package cs2043group10.data;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.function.Predicate;
 
 public class FinancialQuery implements IQuery<FinancialQuery.FinancialEntry> {
 	public final int patientId;
@@ -21,11 +18,6 @@ public class FinancialQuery implements IQuery<FinancialQuery.FinancialEntry> {
 	@Override
 	public int getEntryCount() {
 		return entries.size();
-	}
-	
-	@Override
-	public IQuery<FinancialEntry> filter(Predicate<FinancialEntry> pred) {
-		return new FinancialQuery(patientId, entries.values().stream().filter(pred).toArray(FinancialEntry[]::new));
 	}
 	
 	@Override
