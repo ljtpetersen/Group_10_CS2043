@@ -6,6 +6,7 @@ import cs2043group10.data.LoginClass;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,6 +60,14 @@ public class Main extends Application implements IReversableManager {
 		GridPane.setHalignment(logoutButton, HPos.RIGHT);
 		GridPane.setHgrow(currentNodeTitle, Priority.ALWAYS);
 		GridPane.setValignment(currentNodeTitle, VPos.CENTER);
+		GridPane.setMargin(homeButton, new Insets(4, 0, 0, 4));
+		GridPane.setMargin(logoutButton, new Insets(4, 4, 0, 0));
+		Insets standardInset = new Insets(4, 0, 0, 0);
+		GridPane.setMargin(backwardsButton, standardInset);
+		GridPane.setMargin(forwardsButton, standardInset);
+		GridPane.setMargin(refreshButton, standardInset);
+		GridPane.setMargin(currentNodeTitle, standardInset);
+		GridPane.setMargin(auxiliaryText, standardInset);
 		primaryPane.addRow(0, homeButton, backwardsButton, forwardsButton, refreshButton, currentNodeTitle, auxiliaryText, logoutButton);
 		
 		currentNodeTitle.setText("Login");
@@ -66,7 +75,7 @@ public class Main extends Application implements IReversableManager {
 		loginPrompt.beforeShow();
 		primaryPane.add(loginPrompt.getNode(), 0, 1, 7, 1);
 		
-		Scene scene = new Scene(primaryPane, 500, 400);
+		Scene scene = new Scene(primaryPane, 800, 400);
 		stage.setScene(scene);
 		stage.show();
 		loginPrompt.afterShow();

@@ -16,9 +16,8 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -28,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class PatientQueryView implements IReversable {
@@ -41,6 +41,7 @@ public class PatientQueryView implements IReversable {
 	private static Button viewButton;
 	private static Button medicalHistoryButton;
 	private static Button financialHistoryButton;
+	private static Button createButton;
 	private static VBox view;
 	private static TableView<PatientEntry> table;
 	private static ObservableList<PatientEntry> list;
@@ -65,18 +66,13 @@ public class PatientQueryView implements IReversable {
 		searchField.setPromptText("Enter Name");
 		clearFilter = new Button("\u2a2f");
 		filterButton = new Button("Search");
-		GridPane.setHalignment(searchField, HPos.RIGHT);
-		GridPane.setHalignment(clearFilter, HPos.RIGHT);
-		GridPane.setHalignment(filterButton, HPos.RIGHT);
-		GridPane.setHgrow(searchField, Priority.SOMETIMES);
-		GridPane.setValignment(searchField, VPos.BASELINE);
-		GridPane.setValignment(clearFilter, VPos.CENTER);
-		GridPane.setValignment(filterButton, VPos.CENTER);
 		searchField.setMaxWidth(200);
+		searchField.setMinWidth(200);
+		
 		
 		HBox topRow = new HBox(3);
 		topRow.getChildren().addAll(searchField, clearFilter, filterButton);
-		topRow.setAlignment(Pos.CENTER_RIGHT);
+		topRow.setAlignment(Pos.BASELINE_RIGHT);
 		view.getChildren().add(topRow);
 		
 		table = new TableView<PatientEntry>();
@@ -112,10 +108,14 @@ public class PatientQueryView implements IReversable {
 		viewButton = new Button("View Details");
 		medicalHistoryButton = new Button("Medical Documents");
 		financialHistoryButton = new Button("Financial Documents");
+		createButton = new Button("Create New Patient");
+		Region rg = new Region();
+		HBox.setHgrow(rg, Priority.ALWAYS);
 		HBox bottomRow = new HBox(3);
 		bottomRow.setAlignment(Pos.CENTER_LEFT);
-		bottomRow.getChildren().addAll(viewButton, medicalHistoryButton, financialHistoryButton);
+		bottomRow.getChildren().addAll(viewButton, medicalHistoryButton, financialHistoryButton, rg, createButton);
 		view.getChildren().add(bottomRow);
+		GridPane.setMargin(view, new Insets(0, 4, 4, 4));
 	}
 
 	@Override
@@ -130,6 +130,7 @@ public class PatientQueryView implements IReversable {
 		viewButton.setOnAction(this::changeViewEvent);
 		medicalHistoryButton.setOnAction(this::changeViewEvent);
 		financialHistoryButton.setOnAction(this::changeViewEvent);
+		createButton.setOnAction(this::createEvent);
 	}
 
 	@Override
@@ -203,7 +204,11 @@ public class PatientQueryView implements IReversable {
 	}
 	
 	private void changeViewEvent(ActionEvent event) {
-		int id = table.getSelectionModel().getSelectedItem().id;
+		PatientEntry selectedItem = table.getSelectionModel().getSelectedItem();
+		if (selectedItem == null) {
+			return;
+		}
+		int id = selectedItem.id;
 		if (event.getSource() == viewButton) {
 			viewEntry(id);
 		} else if (event.getSource() == medicalHistoryButton) {
@@ -211,5 +216,9 @@ public class PatientQueryView implements IReversable {
 		} else {
 			viewFinancialHistory(id);
 		}
+	}
+	
+	private void createEvent(ActionEvent event) {
+		manager.pushNewNode(new PatientCreateView(manager));
 	}
 }

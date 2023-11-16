@@ -7,6 +7,7 @@ module cs2043_group_project {
 	requires javafx.fxml;
 	requires transitive javafx.graphics;
 	requires transitive javafx.base;
+	requires java.sql;
 	
 	opens cs2043group10;
 }
