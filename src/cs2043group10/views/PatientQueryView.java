@@ -6,13 +6,11 @@ import java.util.function.Predicate;
 import cs2043group10.DatabaseException;
 import cs2043group10.IReversable;
 import cs2043group10.IReversableManager;
-import cs2043group10.data.PatientQuery;
 import cs2043group10.data.PatientQuery.PatientEntry;
 import cs2043group10.misc.ReadOnlyObservableValue;
 import cs2043group10.misc.WordFilter;
 import cs2043group10.data.IQuery;
 import cs2043group10.data.PatientInformation;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -24,7 +22,6 @@ import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -32,11 +29,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 public class PatientQueryView implements IReversable {
 	private final int doctorId;
-	private IQuery<PatientQuery.PatientEntry> data;
+	private IQuery<PatientEntry> data;
 	private final IReversableManager manager;
 	private WordFilter filter;
 	private static TextField searchField;
@@ -46,12 +42,10 @@ public class PatientQueryView implements IReversable {
 	private static Button medicalHistoryButton;
 	private static Button financialHistoryButton;
 	private static VBox view;
-	private static TableView<PatientQuery.PatientEntry> table;
-	private static TableColumn<PatientQuery.PatientEntry, Integer> idColumn;
-	private static TableColumn<PatientQuery.PatientEntry, String> nameColumn;
-	private static ObservableList<PatientQuery.PatientEntry> list;
-	private static FilteredList<PatientQuery.PatientEntry> filteredList;
-	private static SortedList<PatientQuery.PatientEntry> sortedList;
+	private static TableView<PatientEntry> table;
+	private static ObservableList<PatientEntry> list;
+	private static FilteredList<PatientEntry> filteredList;
+	private static SortedList<PatientEntry> sortedList;
 	private static Consumer<Integer> doubleClickHandler;
 	
 	public PatientQueryView(IReversableManager manager, int doctorId) throws DatabaseException {
@@ -85,17 +79,12 @@ public class PatientQueryView implements IReversable {
 		topRow.setAlignment(Pos.CENTER_RIGHT);
 		view.getChildren().add(topRow);
 		
-		table = new TableView<PatientQuery.PatientEntry>();
-		idColumn = new TableColumn<PatientQuery.PatientEntry, Integer>("Id");
-		idColumn.setCellValueFactory(new Callback<CellDataFeatures<PatientEntry, Integer>, ObservableValue<Integer>>() {
-			@Override
-			public ObservableValue<Integer> call(CellDataFeatures<PatientEntry, Integer> p) {
-				return new ReadOnlyObservableValue<Integer>(p.getValue().id);
-			}
-		});
+		table = new TableView<PatientEntry>();
+		TableColumn<PatientEntry, Integer> idColumn = new TableColumn<PatientEntry, Integer>("Id");
+		idColumn.setCellValueFactory(p -> new ReadOnlyObservableValue<Integer>(p.getValue().id));
 		idColumn.setEditable(false);
 		idColumn.setSortable(true);
-		nameColumn = new TableColumn<PatientQuery.PatientEntry, String>("Name");
+		TableColumn<PatientEntry, String> nameColumn = new TableColumn<PatientEntry, String>("Name");
 		nameColumn.setCellValueFactory(p -> new ReadOnlyObservableValue<String>(p.getValue().name));
 		nameColumn.setEditable(false);
 		nameColumn.setSortable(true);
@@ -106,11 +95,11 @@ public class PatientQueryView implements IReversable {
 		view.getChildren().add(table);
 		
 		list = FXCollections.observableArrayList();
-		filteredList = new FilteredList<PatientQuery.PatientEntry>(list);
-		sortedList = new SortedList<PatientQuery.PatientEntry>(filteredList);
+		filteredList = new FilteredList<PatientEntry>(list);
+		sortedList = new SortedList<PatientEntry>(filteredList);
 		sortedList.comparatorProperty().bind(table.comparatorProperty());
 		table.setRowFactory(tv -> {
-			TableRow<PatientQuery.PatientEntry> row = new TableRow<PatientQuery.PatientEntry>();
+			TableRow<PatientEntry> row = new TableRow<PatientEntry>();
 			row.setOnMouseClicked(e -> {
 				if (e.getClickCount() == 2 && !row.isEmpty()) {
 					doubleClickHandler.accept(row.getItem().id);
@@ -120,7 +109,7 @@ public class PatientQueryView implements IReversable {
 		});
 		table.setItems(sortedList);
 		
-		viewButton = new Button("Patient Document");
+		viewButton = new Button("View Details");
 		medicalHistoryButton = new Button("Medical Documents");
 		financialHistoryButton = new Button("Financial Documents");
 		HBox bottomRow = new HBox(3);
@@ -162,7 +151,7 @@ public class PatientQueryView implements IReversable {
 	@Override
 	public void refresh() {
 		try {
-			IQuery<PatientQuery.PatientEntry> query = manager.getDatabaseManager().queryPatientsUnderDoctor(doctorId);
+			IQuery<PatientEntry> query = manager.getDatabaseManager().queryPatientsUnderDoctor(doctorId);
 			this.data = query;
 			list.setAll(data.getEntries());
 		} catch (DatabaseException e) {
