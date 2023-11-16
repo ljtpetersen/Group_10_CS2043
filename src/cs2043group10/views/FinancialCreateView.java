@@ -13,6 +13,7 @@ public class FinancialCreateView implements IReversable {
 	private String description;
 	private final IReversableManager manager;
 	private static GridPane view;
+	private String title;
 
 	public FinancialCreateView(IReversableManager manager, int patientId) {
 		this.manager = manager;
@@ -27,6 +28,7 @@ public class FinancialCreateView implements IReversable {
 		patientId = document.patientId;
 		amount = document.amount;
 		description = document.description;
+		title = document.title;
 		this.manager = manager;
 		if (view == null) {
 			createView();

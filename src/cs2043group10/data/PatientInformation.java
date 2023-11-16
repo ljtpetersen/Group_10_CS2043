@@ -11,9 +11,10 @@ public class PatientInformation {
 	public final LocalDate dateOfBirth;
 	public final long createTimestamp;
 	public final long modifyTimestamp;
+	public final int doctorId;
 	
 	public PatientInformation(int patientId, String fullName, String address, InsurancePlan insurance,
-			int totalMoneyOwed, LocalDate dateOfBirth, long createTimestamp, long modifyTimestamp) {
+			int totalMoneyOwed, LocalDate dateOfBirth, long createTimestamp, long modifyTimestamp, int doctorId) {
 		this.address = address;
 		this.fullName = fullName;
 		this.insurance = insurance;
@@ -22,5 +23,6 @@ public class PatientInformation {
 		this.dateOfBirth = dateOfBirth;
 		this.createTimestamp = createTimestamp;
 		this.modifyTimestamp = modifyTimestamp;
+		this.doctorId = doctorId;
 	}
 }
