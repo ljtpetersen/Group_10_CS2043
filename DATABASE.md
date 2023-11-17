@@ -10,7 +10,7 @@
 ## `accounts` Table
 - Integer `id` field. `INT UNIQUE NOT NULL AUTO_INCREMENT`
 - Enumeration `class` field. `ENUM('patient', 'doctor') NOT NULL`
-- String `password` field. `CHAR(HASHED_LENGTH)`
+- String `password` field. `BINARY(144)`
 - Date `createTimestamp` field. `DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP`
 - Date `modifyTimestamp` field. `DATETIME(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP`
 

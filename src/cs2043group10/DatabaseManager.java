@@ -1,6 +1,8 @@
 
 package cs2043group10;
 
+import java.security.NoSuchAlgorithmException;
+
 import cs2043group10.data.FinancialDocument;
 import cs2043group10.data.FinancialQuery;
 import cs2043group10.data.LoginClass;
@@ -8,19 +10,22 @@ import cs2043group10.data.MedicalDocument;
 import cs2043group10.data.MedicalQuery;
 import cs2043group10.data.PatientInformation;
 import cs2043group10.data.PatientQuery;
+import cs2043group10.misc.PasswordHasher;
 import cs2043group10.data.IQuery;
 
 public class DatabaseManager implements IDatabase {
 	private int loggedInId;
 	private String loggedInName;
 	private LoginClass loginClass;
-	private IReversableManager manager;
+	private final IReversableManager manager;
+	private final PasswordHasher hasher;
 	
-	public DatabaseManager(IReversableManager manager) {
+	public DatabaseManager(IReversableManager manager) throws NoSuchAlgorithmException {
 		this.manager = manager;
 		loggedInId = -1;
 		loginClass = LoginClass.NOT_LOGGED_IN;
 		loggedInName = null;
+		hasher = new PasswordHasher();
 	}
 	
 	@Override
