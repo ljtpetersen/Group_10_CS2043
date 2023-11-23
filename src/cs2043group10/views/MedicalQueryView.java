@@ -43,6 +43,7 @@ public class MedicalQueryView implements IReversable {
 	private static Button clearFilter;
 	private static Button viewButton;
 	private static Button createButton;
+	private static Button editButton;
 	private static VBox view;
 	private static TableView<MedicalEntry> table;
 	private static ObservableList<MedicalEntry> list;
@@ -64,7 +65,7 @@ public class MedicalQueryView implements IReversable {
 	private static void createView() {
 		view = new VBox(5);
 		searchField = new TextField();
-		searchField.setPromptText("Enter Name");
+		searchField.setPromptText("Enter Search");
 		clearFilter = new Button("\u2a2f");
 		filterButton = new Button("Search");
 		searchField.setMaxWidth(200);
@@ -115,12 +116,13 @@ public class MedicalQueryView implements IReversable {
 		});
 		table.setItems(sortedList);
 		
-		viewButton = new Button("View Details");
+		viewButton = new Button("View");
+		editButton = new Button("Edit");
 		Region rg = new Region();
 		createButton = new Button("Create New Medical Document");
 		HBox bottomRow = new HBox(3);
 		HBox.setHgrow(rg, Priority.ALWAYS);
-		bottomRow.getChildren().addAll(viewButton, rg, createButton);
+		bottomRow.getChildren().addAll(viewButton, editButton, rg, createButton);
 		view.getChildren().add(bottomRow);
 		GridPane.setMargin(view, new Insets(0, 4, 4, 4));
 	}
@@ -136,6 +138,7 @@ public class MedicalQueryView implements IReversable {
 		doubleClickHandler = this::viewEntry;
 		viewButton.setOnAction(this::changeViewEvent);
 		createButton.setOnAction(this::createEvent);
+		editButton.setOnAction(this::changeViewEvent);
 	}
 
 	@Override
@@ -192,13 +195,26 @@ public class MedicalQueryView implements IReversable {
 		}
 	}
 	
+	private void editEntry(Integer id) {
+		try {
+			MedicalDocument data = manager.getDatabaseManager().queryMedicalDocument(id);
+			manager.pushNewNode(new MedicalCreateView(manager, data));
+		} catch (DatabaseException e) {
+			e.display();
+		}
+	}
+	
 	private void changeViewEvent(ActionEvent event) {
 		MedicalEntry selectedItem = table.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
 			return;
 		}
 		int id = selectedItem.documentId;
-		viewEntry(id);
+		if (event.getSource() == viewButton) {
+			viewEntry(id);
+		} else {
+			editEntry(id);
+		}
 	}
 	
 	private void createEvent(ActionEvent event) {

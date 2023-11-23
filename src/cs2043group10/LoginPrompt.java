@@ -95,7 +95,7 @@ public class LoginPrompt implements IReversable {
 		try {
 			loginClass = manager.getDatabaseManager().tryLogin(id, passwordField.getText());
 		} catch (DatabaseException e) {
-			message.setText("Database Exception: " + e.getMessage());
+			e.display();
 			return;
 		}
 

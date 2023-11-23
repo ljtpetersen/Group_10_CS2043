@@ -10,4 +10,17 @@ public class InsurancePlan {
 		this.outOfPocketMaximum = outOfPocketMaximum;
 		this.costSharePercentage = costSharePercentage;
 	}
+	
+	public int amountPaidForPayment(int amount) {
+		int accum = amount - deductible;
+		if (accum <= 0) {
+			return amount;
+		}
+		accum = (100 - costSharePercentage) * accum / 100 + deductible;
+		if (accum > outOfPocketMaximum) {
+			return outOfPocketMaximum;
+		} else {
+			return accum;
+		}
+	}
 }
