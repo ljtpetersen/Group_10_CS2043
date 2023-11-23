@@ -1,0 +1,41 @@
+Stored Procedures List
+
+verifyCredentials:
+CREATE PROCEDURE verifyCredentials(IN id int(11), IN password char(100))
+    -> BEGIN
+    -> SELECT class
+    -> FROM accounts
+    -> WHERE id = id AND password = password;
+    -> END //
+
+queryPatientInformation:
+CREATE PROCEDURE verifyCredentials(IN id int(11), IN password char(100))
+    -> BEGIN
+    -> SELECT class
+    -> FROM accounts
+    -> WHERE id = id AND password = password;
+    -> END //
+
+queryMedicalDocument:
+CREATE PROCEDURE queryMedicalDocument(IN id int(11)) BEGIN SELECT * FROM report WHERE id = id; END//
+
+queryFinancialDocument:
+CREATE PROCEDURE queryFianancialDocument(IN id int(11)) BEGIN SELECT * FROM transactions WHERE id = id; END//
+
+createPatient:
+CREATE PROCEDURE createPatient(
+    -> IN name VARCHAR(50),
+    -> IN address VARCHAR(75),
+    -> IN id INT(11),
+    -> IN dateOfBirth DATE,
+    -> IN doctorId INT(11),
+    -> IN totalAmountDue INT(11),
+    -> IN insuranceDeductible INT(11),
+    -> IN insuranceCostSharePercentage DECIMAL(10,0),
+    -> IN insuranceOutOfPocketMaximum INT(11)
+    -> )
+    -> BEGIN
+    -> INSERT INTO patients (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum)
+    -> VALUES (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum);
+    -> END //
+
