@@ -180,8 +180,40 @@ public class DatabaseManager implements IDatabase {
 	
 	@Override
 	public FinancialDocument queryFinancialDocument(int documentId) throws DatabaseException {
-		// TODO
-		return null;
+		// Create the executable SQL statement
+		String call = "{CALL queryFinancialDocument(?)}";
+
+		// Sets parameter(s) for stored procedure call
+		CallableStatement procedureCall = connector.prepareCall(call);
+		procedureCall.setInt(1, documentId);
+
+		// Executes stored procedure
+		ResultSet resultSet = callableStatement.executeQuery();
+
+		// Declare financial document contents
+		int id;
+		int patientId;
+		int amount;
+		String description;
+		Long createTimeStamp;
+		String title;
+		int amountPaid;
+		
+		// Process the result set
+		while (resultSet.next()) {
+			// Retrieve columns from database
+			id = resultSet.getInt("id");
+			patientId = resultSet.getInt("patientId");
+			amount = resultSet.getInt("amount");
+			description = resultSet.getString("description");
+			createTimeStamp = resultSet.getLong("createTimeStamp");
+			title = resultSet.getString("title");
+			amountPaid = resultSet.getInt("amountPaid");
+		}
+
+		FinancialDocument financialDocument = new financialDocument(id, title, patientId, amount, description, createTimeStamp, title, amountPaid);
+
+		return financialDocument;
 	}
 	
 	@Override
