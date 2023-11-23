@@ -45,6 +45,13 @@ public class DatabaseManager implements IDatabase {
                    ("jdbc:mysql://cs1103.cs.unb.ca:3306/iyoung",  // Database URL
                     "iyoung",   // MySQL username
                     "2RMFsZG2");  // MySQL password
+
+			Boolean isValidCredentials = verifyCredentials(id, password);
+			if (isValidCredentials) {
+				return loginClass;
+			}
+
+			return loginClass;
 			
 		}
 		catch(SQLException e)
@@ -170,7 +177,12 @@ public class DatabaseManager implements IDatabase {
 			String accountClass = resultSet.getString("class");
 		}
 
-		if (accountClass == "patient" || accountClass == "doctor") {
+		if (accountClass == "patient") {
+			loginClass = LoginClass.PATIENT;
+			return true;
+		}
+		else if (accountClass == "doctor") {
+			loginClass = LoginClass.DOCTOR;
 			return true;
 		}
 
