@@ -222,7 +222,7 @@ public class MedicalCreateView implements IReversable {
 		}
 		if (invalidAccum.isEmpty()) {
 			statusText.setText("");
-			MedicalDocument data = new MedicalDocument(documentId, manager.getDatabaseManager().getId(), title, type, body, auxiliary, patientId, -1, -1);
+			MedicalDocument data = new MedicalDocument(documentId, title, type, body, auxiliary, patientId, -1, -1);
 			try {
 				if (documentId == -1) {
 					documentId = manager.getDatabaseManager().createMedicalDocument(data);

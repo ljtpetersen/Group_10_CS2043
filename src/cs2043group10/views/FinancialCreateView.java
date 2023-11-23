@@ -300,7 +300,7 @@ public class FinancialCreateView implements IReversable {
 			if (billType == Type.PAYMENT) {
 				updateAmountToPay();
 			}
-			FinancialDocument data = new FinancialDocument(documentId, patientId, amount, description, -1, title, billType == Type.PAYMENT ? Optional.of(amountPaid) : Optional.empty());
+			FinancialDocument data = new FinancialDocument(documentId, patientId, amount * (billType == Type.BILL ? 1 : -1), description, -1, title, billType == Type.PAYMENT ? Optional.of(amountPaid) : Optional.empty());
 			try {
 				if (documentId == -1) {
 					documentId = manager.getDatabaseManager().createFinancialDocument(data);
