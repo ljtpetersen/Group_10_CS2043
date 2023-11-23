@@ -17,6 +17,7 @@ import cs2043group10.data.IQuery;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.sql.CallableStatement;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -90,8 +91,50 @@ public class DatabaseManager implements IDatabase {
 	
 	@Override
 	public PatientInformation queryPatientInformation(int patientId) throws DatabaseException {
-		// TODO
-		return null;
+		// Create the executable SQL statement
+		String call = "{CALL queryPatientInformation(?)}";
+
+		// Sets parameter(s) for stored procedure call
+		CallableStatement procedureCall = connector.prepareCall(call);
+		procedureCall.setInt(1, patientId);
+
+		// Executes stored procedure
+		ResultSet resultSet = callableStatement.executeQuery();
+
+		// Declare patient info contents
+		String name;
+		String address;
+		int id;
+		Long createTimeStamp;
+		Long modifyTimeStamp;
+		LocalDate dateOfBirth;
+		int doctorId;
+		int totalAmountDue;
+		int insuranceDeductible;
+		int insuranceCostSharePercentage;
+		int insuranceOutOfPocketMaximum;
+
+		// Process the result set
+		while (resultSet.next()) {
+			// Retrieve columns from database
+			name = resultSet.getString("name");
+			address = resultSet.getString("address");
+			id = resultSet.getInt("id");
+			createTimeStamp = resultSet.getLong("createTimeStamp");
+			modifyTimeStamp = resultSet.getLong("modifyTimeStamp");
+			dateOfBirth = resultSet.getLocalDate("dateOfBirth");
+			doctorId = resultSet.getInt("doctorId");
+			totalAmountDue = resultSet.getInt("totalAmountDue");
+			insuranceDeductible = resultSet.getInt("insuranceDeductible");
+			insuranceCostSharePercentage = resultSet.getInt("insuranceCostSharePercentage");
+			insuranceOutOfPocketMaximum = resultSet.getInt("insuranceOutOfPocketMaximum");
+		}
+
+		InsurancePlan insurance = new InsurancePlan(insuranceDeductible, insuranceOutOfPocketMaximum, insuranceCostSharePercentage);
+
+		PatientInformation patientInformation = new PatientInformation(id, name, address, insurance, totalAmountDue, dateOfBirth, createTimeStamp, modifyTimeStamp, doctorId);
+
+		return patientInformation;
 	}
 	
 	@Override
@@ -163,7 +206,7 @@ public class DatabaseManager implements IDatabase {
 		// Create the executable SQL statement
 		String call = "{CALL verifyCredentials(?,?)}";
 
-		// Sets parameters for stored procedure call
+		// Sets parameter(s) for stored procedure call
 		CallableStatement procedureCall = connector.prepareCall(call);
 		procedureCall.setInt(1, id);
 		procedureCall.setString(2, password); // MIGHT END UP PRODUCING AN ERROR (MIGHT NEED TO BE setChar())
