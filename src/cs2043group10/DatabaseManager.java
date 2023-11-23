@@ -13,6 +13,14 @@ import cs2043group10.data.PatientQuery;
 import cs2043group10.misc.PasswordHasher;
 import cs2043group10.data.IQuery;
 
+// Imports required for connecting to the database
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.CallableStatement;
+import java.math.BigDecimal;
+import java.sql.Date;
+
 public class DatabaseManager implements IDatabase {
 	private int loggedInId;
 	private String loggedInName;
@@ -31,7 +39,17 @@ public class DatabaseManager implements IDatabase {
 	@Override
 	public LoginClass tryLogin(int id, String password) throws DatabaseException {
 		// Try to login using id and password.
-		throw new RuntimeException("Not yet implemented.");
+		try
+        {   // Connect to the database
+            Connection connector = DriverManager.getConnection
+                   ("jdbc:mysql://cs1103.cs.unb.ca:3306/iyoung",  // Database URL
+                    "iyoung",   // MySQL username
+                    "2RMFsZG2");  // MySQL password
+		}
+		catch(SQLException e)
+        {   statusLabel.setText("Database error: " + e.getMessage());
+        }
+		//throw new RuntimeException("Not yet implemented.");
 	}
 	
 	@Override
@@ -54,6 +72,7 @@ public class DatabaseManager implements IDatabase {
 		loggedInId = -1;
 		loggedInName = null;
 		loginClass = LoginClass.NOT_LOGGED_IN;
+		connector.close(); // CLoses connection with database
 	}
 	
 	@Override
