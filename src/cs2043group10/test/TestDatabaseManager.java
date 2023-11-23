@@ -110,8 +110,10 @@ public class TestDatabaseManager implements IDatabase {
 	
 	@Override
 	public IQuery<FinancialQuery.FinancialEntry> queryFinancialDocumentsUnderPatient(int patientId) throws DatabaseException {
-		// TODO
-		return null;
+		return new FinancialQuery(patientId, new FinancialQuery.FinancialEntry[] {
+			new FinancialQuery.FinancialEntry("Cold Prescription", 1697489009, 10000, 1),
+			new FinancialQuery.FinancialEntry("Foot Brace", 1597489009, 100000, 2)
+		});
 	}
 	
 	@Override

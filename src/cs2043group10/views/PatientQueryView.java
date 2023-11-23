@@ -39,6 +39,7 @@ public class PatientQueryView implements IReversable {
 	private static Button filterButton;
 	private static Button clearFilter;
 	private static Button viewButton;
+	private static Button editButton;
 	private static Button medicalHistoryButton;
 	private static Button financialHistoryButton;
 	private static Button createButton;
@@ -105,7 +106,8 @@ public class PatientQueryView implements IReversable {
 		});
 		table.setItems(sortedList);
 		
-		viewButton = new Button("View Details");
+		viewButton = new Button("View");
+		editButton = new Button("Edit");
 		medicalHistoryButton = new Button("Medical Documents");
 		financialHistoryButton = new Button("Financial Documents");
 		createButton = new Button("Create New Patient");
@@ -113,7 +115,7 @@ public class PatientQueryView implements IReversable {
 		HBox.setHgrow(rg, Priority.ALWAYS);
 		HBox bottomRow = new HBox(3);
 		bottomRow.setAlignment(Pos.CENTER_LEFT);
-		bottomRow.getChildren().addAll(viewButton, medicalHistoryButton, financialHistoryButton, rg, createButton);
+		bottomRow.getChildren().addAll(viewButton, editButton, medicalHistoryButton, financialHistoryButton, rg, createButton);
 		view.getChildren().add(bottomRow);
 		GridPane.setMargin(view, new Insets(0, 4, 4, 4));
 	}
@@ -131,6 +133,7 @@ public class PatientQueryView implements IReversable {
 		medicalHistoryButton.setOnAction(this::changeViewEvent);
 		financialHistoryButton.setOnAction(this::changeViewEvent);
 		createButton.setOnAction(this::createEvent);
+		editButton.setOnAction(this::changeViewEvent);
 	}
 
 	@Override
@@ -203,6 +206,14 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	private void editEntry(Integer id) {
+		try {
+			manager.pushNewNode(new PatientCreateView(manager, manager.getDatabaseManager().queryPatientInformation(id)));
+		} catch (DatabaseException e) {
+			e.display();
+		}
+	}
+	
 	private void changeViewEvent(ActionEvent event) {
 		PatientEntry selectedItem = table.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
@@ -211,6 +222,8 @@ public class PatientQueryView implements IReversable {
 		int id = selectedItem.id;
 		if (event.getSource() == viewButton) {
 			viewEntry(id);
+		} else if (event.getSource() == editButton) {
+			editEntry(id);
 		} else if (event.getSource() == medicalHistoryButton) {
 			viewMedicalHistory(id);
 		} else {
