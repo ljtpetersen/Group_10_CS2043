@@ -9,11 +9,11 @@ CREATE PROCEDURE verifyCredentials(IN id int(11), IN password char(100))
     -> END //
 
 queryPatientInformation:
-CREATE PROCEDURE verifyCredentials(IN id int(11), IN password char(100))
+CREATE PROCEDURE queryPatientInformation(IN id int(11)) 
     -> BEGIN
-    -> SELECT class
-    -> FROM accounts
-    -> WHERE id = id AND password = password;
+    -> SELECT *
+    -> FROM patients
+    -> WHERE id = id;
     -> END //
 
 queryMedicalDocument:
