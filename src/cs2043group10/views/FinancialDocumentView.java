@@ -6,6 +6,9 @@ import cs2043group10.IReversableManager;
 import cs2043group10.data.FinancialDocument;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import java.util.Optional;
+
 
 public class FinancialDocumentView implements IReversable {
 	private FinancialDocument data;
@@ -32,51 +35,77 @@ public class FinancialDocumentView implements IReversable {
 	}
 	
 	private static void createView() {
-	private static VBox createView(FinancialDocument financialDocument) {
-    VBox view = new VBox(10);
-    view.setPadding(new Insets(10));
+        view = new GridPane();
+        view.setVgap(10);
+        view.setHgap(10);
 
-    Label titleLabel = new Label("Title: " + financialDocument.title);
-    Label idLabel = new Label("Document ID: " + financialDocument.documentId);
-    Label patientIdLabel = new Label("Patient ID: " + financialDocument.patientId);
-    Label amountLabel = new Label("Amount: $" + financialDocument.amount);
-    Label descriptionLabel = new Label("Description: " + financialDocument.description);
-    Label timestampLabel = new Label("Created At: " + new Date(financialDocument.createTimestamp));
-    Label amountPaidLabel = new Label("Amount Paid: " + (financialDocument.amountPaid.isPresent() ? "$" + financialDocument.amountPaid.get() : "Not paid"));
+        Label titleLabel = new Label("Title: ");
+        
 
-    // Style labels
-    Stream.of(titleLabel, idLabel, patientIdLabel, amountLabel, descriptionLabel, timestampLabel, amountPaidLabel)
-            .forEach(label -> label.setStyle("-fx-font-weight: bold"));
+        Label documentIdLabel = new Label("Document ID: ");
+        
 
-    view.getChildren().addAll(titleLabel, idLabel, patientIdLabel, amountLabel, descriptionLabel, timestampLabel, amountPaidLabel);
+        Label patientIdLabel = new Label("Patient ID: ");
+        
 
-    return view;
-}
+        Label amountLabel = new Label("Amount: ");
+        
 
-	}
+        Label descriptionLabel = new Label("Description: ");
+       
+
+        Label createdAtLabel = new Label("Created At: ");
+        
+
+        Label amountPaidLabel = new Label("Amount Paid: ");
+        
+	view.addColumn(0, titleLabel, documentIdLabel, patientIdLabel,
+            amountLabel, descriptionLabel, createdAtLabel, amountPaidLabel);
+
+       
+    }
+
+    
+
 
 	@Override
 	public void beforeShow() {
-		// TODO Auto-generated method stub
-		
+	titleLabel.setText("Title: " + data.title);
+        documentIdLabel.setText("Document ID: " + data.documentId);
+        patientIdLabel.setText("Patient ID: " + data.patientId);
+        amountLabel.setText("Amount: $" + data.amount);
+        descriptionLabel.setText("Description: " + data.description);
+        createdAtLabel.setText("Created At: " + data.createTimestamp);
+	if (data.amountPaid.isPresent()) {
+	        amountPaidLabel.setText("Amount Paid: $" + data.amountPaid.get());
+	} else {
+		amountPaidLabel.setText("");
 	}
+    }
+		
+	
+ Button editButton = new Button("Edit");
+        editButton.setOnAction(e -> {
+            
+        });
 
+        GridPane.setConstraints(editButton, 1, 7);
+        GridPane.setMargin(editButton, new Insets(10, 0, 0, 0)); // Adjust margins as needed
+
+        view.getChildren().add(editButton);
 	@Override
-	public void afterHide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void afterHide() {}
 
 	@Override
 	public Node getNode() {
 		// TODO Auto-generated method stub
-		return null;
+		return view;
 	}
 
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub
-		return null;
+		return "View Financial Document";
 	}
 
 	@Override
@@ -103,3 +132,4 @@ public class FinancialDocumentView implements IReversable {
 		
 	}
 }
+
