@@ -139,8 +139,43 @@ public class DatabaseManager implements IDatabase {
 	
 	@Override
 	public MedicalDocument queryMedicalDocument(int documentId) throws DatabaseException {
-		// TODO
-		return null;
+		// Create the executable SQL statement
+		String call = "{CALL queryMedicalDocument(?)}";
+
+		// Sets parameter(s) for stored procedure call
+		CallableStatement procedureCall = connector.prepareCall(call);
+		procedureCall.setInt(1, documentId);
+
+		// Executes stored procedure
+		ResultSet resultSet = callableStatement.executeQuery();
+
+		// Declare medical document contents
+		// IMPORTANT: CAN WE REMOVE AUTHORID ITS NOT IN DATABASE???
+		String title;
+		String type;
+		String body;
+		String auxiliary;
+		int patientId;
+		int id;
+		Long createTimeStamp;
+		Long modifyTimeStamp;
+
+		// Process the result set
+		while (resultSet.next()) {
+			// Retrieve columns from database
+			title = resultSet.getString("title");
+			type = resultSet.getString("type");
+			body = resultSet.getString("body");
+			auxiliary = resultSet.getString("auxiliary");
+			patientId = resultSet.getInt("patientId");
+			id = resultSet.getInt("id");
+			createTimeStamp = resultSet.getLong("createTimeStamp");
+			modifyTimeStamp = resultSet.getLong("modifyTimeStamp");
+		}
+
+		MedicalDocument medicalDocument = new MedicalDocument(documentId, title, type, body, auxiliary, patientId, modifyTimeStamp, createTimeStamp);
+		
+		return medicalDocument;
 	}
 	
 	@Override
