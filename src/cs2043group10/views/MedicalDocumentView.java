@@ -71,14 +71,15 @@ public class MedicalDocumentView implements IReversable {
 
 	@Override
 	public void beforeShow() {
-	Label titleLabel = new Label("Title: " + data.title);
-        Label docIdLabel = new Label("Document ID: " + data.documentId);
-        Label patientIdLabel = new Label("Patient ID: " + data.patientId);
-        Label typeLabel = new Label("Type: " + data.type);
-        Label bodyLabel = new Label("Body: " + data.body);
-        Label auxiliaryLabel = new Label("Auxiliary: " + data.auxiliary);
-        Label createdAtLabel = new Label("Created At: " + data.createTimestamp);
-        Label modifiedAtLabel = new Label("Modified At: " + data.modifyTimestamp);
+		
+	titleLabel.setText("Title: " + data.title);
+       titleLabel.setText("Document ID: " + data.documentId);
+       titleLabel.setText("Patient ID: " + data.patientId);
+        titleLabel.setText("Type: " + data.type);
+        titleLabel.setText("Body: " + data.body);
+        titleLabel.setText("Auxiliary: " + data.auxiliary);
+        titleLabel.setText("Created At: " + data.createTimestamp);
+        titleLabel.setText("Modified At: " + data.modifyTimestamp);
 		
 	}
 
