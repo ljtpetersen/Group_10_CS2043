@@ -32,17 +32,15 @@ public class FinancialQuery implements IQuery<FinancialQuery.FinancialEntry> {
 	
 	public static class FinancialEntry {
 		public final long createTimestamp;
-		public final long modifyTimestamp;
-		public final String description;
 		public final int documentId;
 		public final long amount;
+		public final String title;
 		
-		public FinancialEntry(long createTimestamp, int modifyTimestamp, String description, long amount, int documentId) {
+		public FinancialEntry(String title, long createTimestamp, long amount, int documentId) {
 			this.createTimestamp = createTimestamp;
-			this.modifyTimestamp = modifyTimestamp;
-			this.description = description;
 			this.amount = amount;
 			this.documentId = documentId;
+			this.title = title;
 		}
 	}
 
