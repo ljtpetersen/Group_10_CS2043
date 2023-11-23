@@ -1,7 +1,6 @@
 package cs2043group10.data;
 
 public class MedicalDocument {
-	public final int authorId;
 	public final String title;
 	public final String type;
 	public final String body;
@@ -11,8 +10,7 @@ public class MedicalDocument {
 	public final long createTimestamp;
 	public final long modifyTimestamp;
 	
-	public MedicalDocument(int documentId, int authorId, String title, String type, String body, String auxiliary, int patientId, long modifyTimestamp, long createTimestamp) {
-		this.authorId = authorId;
+	public MedicalDocument(int documentId, String title, String type, String body, String auxiliary, int patientId, long modifyTimestamp, long createTimestamp) {
 		this.title = title;
 		this.type = type;
 		this.body = body;
