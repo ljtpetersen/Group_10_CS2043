@@ -45,6 +45,7 @@ public class DatabaseManager implements IDatabase {
                    ("jdbc:mysql://cs1103.cs.unb.ca:3306/iyoung",  // Database URL
                     "iyoung",   // MySQL username
                     "2RMFsZG2");  // MySQL password
+			
 		}
 		catch(SQLException e)
         {   statusLabel.setText("Database error: " + e.getMessage());
@@ -148,5 +149,31 @@ public class DatabaseManager implements IDatabase {
 	@Override
 	public void updateFinancialDocument(FinancialDocument document) throws DatabaseException {
 		// TODO
+	}
+
+	@Override
+	public boolean verifyCredentials(int id, String password) throws DatabaseException {
+		// Create the executable SQL statement
+		String call = "{CALL verifyCredentials(?,?)}";
+
+		// Sets parameters for stored procedure call
+		CallableStatement procedureCall = connector.prepareCall(call);
+		procedureCall.setInt(1, id);
+		procedureCall.setString(2, password); // MIGHT END UP PRODUCING AN ERROR (MIGHT NEED TO BE setChar())
+
+		// Executes stored procedure
+		ResultSet resultSet = callableStatement.executeQuery();
+
+		// Process the result set
+		while (resultSet.next()) {
+			// Retrieve class from database
+			String accountClass = resultSet.getString("class");
+		}
+
+		if (accountClass == "patient" || accountClass == "doctor") {
+			return true;
+		}
+
+		return false;
 	}
 }

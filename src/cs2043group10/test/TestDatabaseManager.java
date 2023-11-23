@@ -147,4 +147,15 @@ public class TestDatabaseManager implements IDatabase {
 	public void updateFinancialDocument(FinancialDocument document) throws DatabaseException {
 		// TODO
 	}
+	
+	@Override
+	public boolean verifyCredentials(int id, String password) throws DatabaseException {
+		String accountClass = "doctor";
+
+		if (accountClass == "patient" || accountClass == "doctor") {
+			return true;
+		}
+
+		return false;
+	}
 }
