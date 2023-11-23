@@ -43,14 +43,15 @@ public class MedicalCreateView implements IReversable {
         view.setHgap(10);
         view.setVgap(10);
 
-        Label titleLabel = new Label("Title: " + data.title);
-        Label docIdLabel = new Label("Document ID: " + data.documentId);
-        Label patientIdLabel = new Label("Patient ID: " + data.patientId);
-        Label typeLabel = new Label("Type: " + data.type);
-        Label bodyLabel = new Label("Body: " + data.body);
-        Label auxiliaryLabel = new Label("Auxiliary: " + data.auxiliary);
-        Label createdAtLabel = new Label("Created At: " + data.createTimestamp);
-        Label modifiedAtLabel = new Label("Modified At: " + data.modifyTimestamp);
+        
+        Label titleLabel = new Label("Title: ");
+        Label docIdLabel = new Label("Document ID: " );
+        Label patientIdLabel = new Label("Patient ID: " );
+        Label typeLabel = new Label("Type: " );
+        Label bodyLabel = new Label("Body: " );
+        Label auxiliaryLabel = new Label("Auxiliary: " );
+        Label createdAtLabel = new Label("Created At: " );
+        Label modifiedAtLabel = new Label("Modified At: " );
        
 	view.addColumn(0,titleLabel,docIdLabel,patientIdLabel,typeLabel,bodyLabel,auxiliaryLabel,createdAtLabel,modifiedAtLabel );
         
@@ -76,7 +77,14 @@ public class MedicalCreateView implements IReversable {
 
 	@Override
 	public void beforeShow() {
-		// TODO Auto-generated method stub
+	Label titleLabel = new Label("Title: " + data.title);
+        Label docIdLabel = new Label("Document ID: " + data.documentId);
+        Label patientIdLabel = new Label("Patient ID: " + data.patientId);
+        Label typeLabel = new Label("Type: " + data.type);
+        Label bodyLabel = new Label("Body: " + data.body);
+        Label auxiliaryLabel = new Label("Auxiliary: " + data.auxiliary);
+        Label createdAtLabel = new Label("Created At: " + data.createTimestamp);
+        Label modifiedAtLabel = new Label("Modified At: " + data.modifyTimestamp);
 		
 	}
 
