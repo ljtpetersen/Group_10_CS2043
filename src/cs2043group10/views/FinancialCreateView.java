@@ -31,29 +31,103 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/**
+ * This is the view which allows users to create financial documents.
+ * 
+ * @author James Petersen
+ */
 public class FinancialCreateView implements IReversable {
+	/**
+	 * The id of the document.
+	 */
 	private int documentId;
+	/**
+	 * The id of the patient associated with the document.
+	 */
 	private final int patientId;
+	/**
+	 * The amount of the financial document.
+	 */
 	private int amount;
+	/**
+	 * The amount the patient will pay, if applicable.
+	 */
 	private int amountPaid;
+	/**
+	 * The insurance plan of the patient.
+	 */
 	private InsurancePlan insurance;
+	/**
+	 * The description of the document.
+	 */
 	private String description;
+	/**
+	 * The manager within which the view resides.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The node within which the form resides.
+	 */
 	private static VBox view;
+	/**
+	 * The title of the document.
+	 */
 	private String title;
+	/**
+	 * The field within which the user enters the document's title.
+	 */
 	private static TextField titleField;
+	/**
+	 * The field within which the user enters the document's amount.
+	 */
 	private static TextField amountField;
+	/**
+	 * The field within which the user enters the document's description.
+	 */
 	private static TextArea descriptionField;
+	/**
+	 * The text which will display the document's id.
+	 */
 	private static Text id;
+	/**
+	 * The text which will display the patient's id.
+	 */
 	private static Text patientIdText;
+	/**
+	 * The text which will display the amount the patient will
+	 * have to pay, if applicable.
+	 */
 	private static Text amountToPay;
+	/**
+	 * The option that this document is a bill.
+	 */
 	private static RadioButton billOption;
+	/**
+	 * The option that this document is a payment. 
+	 */
 	private static RadioButton paymentOption;
+	/**
+	 * The button the user will press to save the document.
+	 */
 	private static Button saveButton;
+	/**
+	 * The method to be called when the document's type is switched.
+	 */
 	private static Consumer<Type> changeType;
+	/**
+	 * The text within which error messages will be displayed.
+	 */
 	private static Text statusText;
+	/**
+	 * The type of the document.
+	 */
 	private Type billType;
 
+	/**
+	 * Create a new financial create view with a given patient id.
+	 * @param manager The manager within which the view resides.
+	 * @param patientId The id of the patient.
+	 */
 	public FinancialCreateView(IReversableManager manager, int patientId) {
 		this.manager = manager;
 		this.patientId = patientId;
@@ -65,19 +139,9 @@ public class FinancialCreateView implements IReversable {
 		}
 	}
 	
-	public FinancialCreateView(IReversableManager manager, FinancialDocument document) {
-		documentId = document.documentId;
-		patientId = document.patientId;
-		amount = document.amount >= 0 ? document.amount : -document.amount;
-		description = document.description;
-		title = document.title;
-		billType = document.amount >= 0 ? Type.BILL : Type.PAYMENT; 
-		this.manager = manager;
-		if (view == null) {
-			createView();
-		}
-	}
-	
+	/**
+	 * Create the view associated with this class.
+	 */
 	private static void createView() {
 		view = new VBox(5);
 		
@@ -200,6 +264,10 @@ public class FinancialCreateView implements IReversable {
 		typeChange(billType);
 	}
 	
+	/**
+	 * Get the insurance plan of the patient.
+	 * @throws DatabaseException
+	 */
 	private void getInsurancePlan() throws DatabaseException {
 		if (insurance != null) {
 			return;
@@ -266,11 +334,18 @@ public class FinancialCreateView implements IReversable {
 	@Override
 	public void beforeHide() {}
 	
+	/**
+	 * The enumeration of the types of financial documents.
+	 */
 	private static enum Type {
 		PAYMENT,
 		BILL;
 	}
 	
+	/**
+	 * The method which is called when they type is changed.
+	 * @param newType The new type.
+	 */
 	private void typeChange(Type newType) {
 		billType = newType;
 		switch (billType) {
@@ -283,6 +358,10 @@ public class FinancialCreateView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The event handler which is to be called when the user tries to save their changes. 
+	 * @param event The event.
+	 */
 	private void saveEvent(ActionEvent event) {
 		String invalidAccum = "";
 		afterHide();
@@ -316,12 +395,19 @@ public class FinancialCreateView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The event handler which is to be called when the user changes the amount of the document.
+	 * @param event The event.
+	 */
 	private void updateAmountEvent(ActionEvent event) {
 		if (billType == Type.PAYMENT) {
 			updateAmountToPay();
 		}
 	}
 	
+	/**
+	 * The method which will update the amount to be payed based on the insurance plan.
+	 */
 	private void updateAmountToPay() {
 		try {
 			amount = (int)(Double.parseDouble(amountField.getText()) * 100.0);

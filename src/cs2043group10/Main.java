@@ -16,17 +16,57 @@ import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * This class is the reversable manager. It is responsible for initializing
+ * the database manager, displaying the login prompt, and managing the window.
+ * 
+ * @author James Petersen
+ */
 public class Main extends Application implements IReversableManager {
+	/**
+	 * This is the stack which contains the nodes.
+	 */
 	private Vector<IReversable> nodeStack;
+	/**
+	 * This is the index of the currently active node.
+	 */
 	private int currentNodeIndex;
+	/**
+	 * This is the pane which contains the currently active node, as well as
+	 * the top bar containing control buttons.
+	 */
 	private GridPane primaryPane;
+	/**
+	 * This is the button which users press when they want to go backwards in the history.
+	 */
 	private Button backwardsButton;
+	/**
+	 * This is the button which users press when they want to go forwards in the history.
+	 */
 	private Button forwardsButton;
+	/**
+	 * This is the button which users press when they want to go to the home page.
+	 */
 	private Button homeButton;
+	/**
+	 * This is the button which users press when they want to log out.
+	 */
 	private Button logoutButton;
+	/**
+	 * This is the text node containing the title.
+	 */
 	private Text currentNodeTitle;
+	/**
+	 * This is an auxiliary text node used to display status information.
+	 */
 	private Text auxiliaryText;
+	/**
+	 * This is the current database manager.
+	 */
 	private IDatabase databaseManager;
+	/**
+	 * This is the login prompt node, which is not kept in the history.
+	 */
 	private IReversable loginPrompt;
 	
 	@Override
@@ -108,6 +148,11 @@ public class Main extends Application implements IReversableManager {
 		return databaseManager;
 	}
 	
+	/**
+	 * This method is called by the login prompt if valid credentials have been entered.
+	 * It will instantiate the home view, hide the login prompt, show the home view,
+	 * set the auxiliary text, and enable some buttons in the top bar.
+	 */
 	private void login() {
 		IReversable homeView;
 		try {
@@ -130,6 +175,10 @@ public class Main extends Application implements IReversableManager {
 		homeView.afterShow();
 	}
 	
+	/**
+	 * This is the event handler which handles the logout button being pressed.
+	 * @param event The event.
+	 */
 	private void logoutEvent(ActionEvent event) {
 		IReversable oldNode = nodeStack.get(currentNodeIndex);
 		oldNode.beforeHide();
@@ -151,6 +200,10 @@ public class Main extends Application implements IReversableManager {
 		loginPrompt.afterShow();
 	}
 	
+	/**
+	 * This is the event handler which handles the home button being pressed.
+	 * @param event The event.
+	 */
 	private void homeEvent(ActionEvent event) {
 		try {
 			pushNewNode(databaseManager.instantiateHomeView());
@@ -159,6 +212,10 @@ public class Main extends Application implements IReversableManager {
 		}
 	}
 	
+	/**
+	 * This is the event handler which handles the backwards or forwards buttons being pressed.
+	 * @param event The event.
+	 */
 	private void historyEvent(ActionEvent event) {
 		if (event.getSource() == backwardsButton) {
 			IReversable oldNode = nodeStack.get(currentNodeIndex);
@@ -248,6 +305,10 @@ public class Main extends Application implements IReversableManager {
 		return nodeStack.lastElement() == node;
 	}
 	
+	/**
+	 * This is the event hanlder which handles the refresh button being pressed.
+	 * @param event The event.
+	 */
 	private void refreshEvent(ActionEvent event) {
 		if (databaseManager.getLoginClass() == LoginClass.NOT_LOGGED_IN) {
 			loginPrompt.refresh();

@@ -33,23 +33,79 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * This view allows users to query the medical documents under a patient.
+ * 
+ * @author James Petersen
+ */
 public class FinancialQueryView implements IReversable {
+	/**
+	 * The id of the patient whose financial documents are to be queried. 
+	 */
 	private final int patientId;
+	/**
+	 * The results of the query.
+	 */
 	private IQuery<FinancialEntry> data;
+	/**
+	 * The manager within which this view is contained.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The filter which is applied to the query.
+	 */
 	private WordFilter filter;
+	/**
+	 * The field within which a filter is entered.
+	 */
 	private static TextField searchField;
+	/**
+	 * The button which is pressed to apply the entered filter.
+	 */
 	private static Button filterButton;
+	/**
+	 * The button which is pressed to clear the entered filter.
+	 */
 	private static Button clearFilter;
+	/**
+	 * The button which is pressed to view the selected entry.
+	 */
 	private static Button viewButton;
+	/**
+	 * The button which is pressed to create a new entry.
+	 */
 	private static Button createButton;
+	/**
+	 * The node which contains the table and controls.
+	 */
 	private static VBox view;
+	/**
+	 * The table.
+	 */
 	private static TableView<FinancialEntry> table;
+	/**
+	 * The list that backs the table.
+	 */
 	private static ObservableList<FinancialEntry> list;
+	/**
+	 * The list after the filter has been applied.
+	 */
 	private static FilteredList<FinancialEntry> filteredList;
+	/**
+	 * The list after it has been sorted into the correct order.
+	 */
 	private static SortedList<FinancialEntry> sortedList;
+	/**
+	 * The method which will be called when an entry is double-clicked.
+	 */
 	private static Consumer<Integer> doubleClickHandler;
 	
+	/**
+	 * Create a new financial query view.
+	 * @param manager The manager within which the view resides.
+	 * @param patientId The patient whose documents are to be queried.
+	 * @throws DatabaseException
+	 */
 	public FinancialQueryView(IReversableManager manager, int patientId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryFinancialDocumentsUnderPatient(patientId);
 		this.patientId = patientId;
@@ -60,6 +116,9 @@ public class FinancialQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Create the view associated with this class.
+	 */
 	@SuppressWarnings("unchecked")
 	private static void createView() {
 		view = new VBox(5);
@@ -167,6 +226,10 @@ public class FinancialQueryView implements IReversable {
 	@Override
 	public void beforeHide() {}
 	
+	/**
+	 * The event handler which is to be called when the user applies a filter.
+	 * @param event The event.
+	 */
 	private void filterEvent(ActionEvent event) {
 		filter.setCurrentFilter(searchField.getText());
 		Predicate<? super FinancialEntry> pred = filteredList.getPredicate();
@@ -174,11 +237,19 @@ public class FinancialQueryView implements IReversable {
 		filteredList.setPredicate(pred);
 	}
 	
+	/**
+	 * The event handler which is to be called when the user clears the filter.
+	 * @param event The event.
+	 */
 	private void clearFilterEvent(ActionEvent event) {
 		searchField.setText("");
 		filterEvent(event);
 	}
 	
+	/**
+	 * The method which is called to view an entry.
+	 * @param id The id of the entry to be viewed.
+	 */
 	private void viewEntry(Integer id) {
 		try {
 			FinancialDocument data = manager.getDatabaseManager().queryFinancialDocument(id);
@@ -188,6 +259,10 @@ public class FinancialQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The event handler which is to be called when the user tries to perform an action on an entry.
+	 * @param event The event.
+	 */
 	private void changeViewEvent(ActionEvent event) {
 		FinancialEntry selectedItem = table.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
@@ -197,6 +272,10 @@ public class FinancialQueryView implements IReversable {
 		viewEntry(id);
 	}
 	
+	/**
+	 * The event handler which is to be called when the user tries to create a new entry.
+	 * @param event The event.
+	 */
 	private void createEvent(ActionEvent event) {
 		manager.pushNewNode(new FinancialCreateView(manager, patientId));
 	}

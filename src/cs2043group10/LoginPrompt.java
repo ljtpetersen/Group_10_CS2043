@@ -15,15 +15,47 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/**
+ * This class is the reversable node which prompts the user for their credentials.
+ * 
+ * @author James Petersen
+ */
 public class LoginPrompt implements IReversable {
-	private IReversableManager manager;
-	private Runnable loginMethod;
+	/**
+	 * This is the manager which created this prompt.
+	 */
+	private final IReversableManager manager;
+	/**
+	 * This is the method to be called if a user successfully logs in.
+	 */
+	private final Runnable loginMethod;
+	/**
+	 * This is the field containing the user's id.
+	 */
 	private static TextField idField;
+	/**
+	 * This is the field containing the user's password.
+	 */
 	private static PasswordField passwordField;
+	/**
+	 * This is the node containing the prompt.
+	 */
 	private static VBox loginNode;
+	/**
+	 * This is the status text which is used to convey status information to the user
+	 * if an error occurs.
+	 */
 	private static Text message;
+	/**
+	 * This is the button the user presses when they wish to log in.
+	 */
 	private static Button loginButton;
 
+	/**
+	 * Construct a new login prompt from a manager and method.
+	 * @param manager The manager which handles this prompt.
+	 * @param loginMethod The method called upon a successful log in.
+	 */
 	public LoginPrompt(IReversableManager manager, Runnable loginMethod) {
 		this.manager = manager;
 		this.loginMethod = loginMethod;
@@ -32,6 +64,9 @@ public class LoginPrompt implements IReversable {
 		}
 	}
 
+	/**
+	 * This method constructs the node view.
+	 */
 	private static void createNode() {
 		idField = new TextField();
 		idField.setPromptText("Account ID");
@@ -82,6 +117,10 @@ public class LoginPrompt implements IReversable {
 	@Override
 	public void destroy() {}
 
+	/**
+	 * This is the event handler which handles the login button being pressed.
+	 * @param event The event.
+	 */
 	private void loginEvent(ActionEvent event) {
 		int id;
 		try {

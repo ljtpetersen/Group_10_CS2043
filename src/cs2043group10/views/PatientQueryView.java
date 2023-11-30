@@ -30,26 +30,91 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * This is the view which shows a list of patients and allows one to perform an action on them.
+ * 
+ * @author James Petersen
+ */
 public class PatientQueryView implements IReversable {
+	/**
+	 * The id of the doctor whose patients should be queried.
+	 */
 	private final int doctorId;
+	/**
+	 * The data which was retrieved from the database.
+	 */
 	private IQuery<PatientEntry> data;
+	/**
+	 * The manager which manages this view.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The search filter applied to the query.
+	 */
 	private WordFilter filter;
+	/**
+	 * The field in which the search filter is entered.
+	 */
 	private static TextField searchField;
+	/**
+	 * The button which is pressed to filter the items.
+	 */
 	private static Button filterButton;
+	/**
+	 * The button which is pressed to clear the filter.
+	 */
 	private static Button clearFilter;
+	/**
+	 * The button which is pressed to view the selected patient.
+	 */
 	private static Button viewButton;
+	/**
+	 * The button which is pressed to edit the selected patient.
+	 */
 	private static Button editButton;
+	/**
+	 * The button which is pressed to view the medical history of the selected patient.
+	 */
 	private static Button medicalHistoryButton;
+	/**
+	 * The button which is pressed to view the financial history of the selected patient.
+	 */
 	private static Button financialHistoryButton;
+	/**
+	 * The button which is pressed to create a new patient.
+	 */
 	private static Button createButton;
+	/**
+	 * The view which contains the table and related items.
+	 */
 	private static VBox view;
+	/**
+	 * The table which contains the patient entries.
+	 */
 	private static TableView<PatientEntry> table;
+	/**
+	 * The list which contains the patient entries.
+	 */
 	private static ObservableList<PatientEntry> list;
+	/**
+	 * The list which contains the filtered patient entries.
+	 */
 	private static FilteredList<PatientEntry> filteredList;
+	/**
+	 * The list which contains the sorted patient entries after being filtered.
+	 */
 	private static SortedList<PatientEntry> sortedList;
+	/**
+	 * The handler for the double click event.
+	 */
 	private static Consumer<Integer> doubleClickHandler;
 	
+	/**
+	 * Construct a new patient query view.
+	 * @param manager The manager which manages this view.
+	 * @param doctorId The doctor whose patients should be queried.
+	 * @throws DatabaseException
+	 */
 	public PatientQueryView(IReversableManager manager, int doctorId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryPatientsUnderDoctor(doctorId);
 		this.doctorId = doctorId;
@@ -61,6 +126,9 @@ public class PatientQueryView implements IReversable {
 	}
 	
 	@SuppressWarnings("unchecked")
+	/**
+	 * Create the view for this class.
+	 */
 	private static void createView() {
 		view = new VBox(5);
 		searchField = new TextField();
@@ -169,6 +237,10 @@ public class PatientQueryView implements IReversable {
 	@Override
 	public void beforeHide() {}
 	
+	/**
+	 * This is the event handler which handles the filter event.
+	 * @param event The event.
+	 */
 	private void filterEvent(ActionEvent event) {
 		filter.setCurrentFilter(searchField.getText());
 		Predicate<? super PatientEntry> pred = filteredList.getPredicate();
@@ -176,11 +248,19 @@ public class PatientQueryView implements IReversable {
 		filteredList.setPredicate(pred);
 	}
 	
+	/**
+	 * This is the event handler which handles the clear filter event.
+	 * @param event The event.
+	 */
 	private void clearFilterEvent(ActionEvent event) {
 		searchField.setText("");
 		filterEvent(event);
 	}
 	
+	/**
+	 * This is the method which is called when an entry has been selected to be viewed.
+	 * @param id The id of the patient to view.
+	 */
 	private void viewEntry(Integer id) {
 		try {
 			PatientInformation data = manager.getDatabaseManager().queryPatientInformation(id);
@@ -190,6 +270,10 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * This is the method which is called to view the medical history of a patient.
+	 * @param id The id of the patient.
+	 */
 	private void viewMedicalHistory(Integer id) {
 		try {
 			manager.pushNewNode(new MedicalQueryView(manager, id));
@@ -198,6 +282,10 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * This is the method which is called to view the financial history of a patient.
+	 * @param id The id of the patient.
+	 */
 	private void viewFinancialHistory(Integer id) {
 		try {
 			manager.pushNewNode(new FinancialQueryView(manager, id));
@@ -206,6 +294,10 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * This is the method which is called to edit a patient entry.
+	 * @param id The id of the patient.
+	 */
 	private void editEntry(Integer id) {
 		try {
 			manager.pushNewNode(new PatientCreateView(manager, manager.getDatabaseManager().queryPatientInformation(id)));
@@ -214,6 +306,10 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * This is the event handler which is called when the user tries to perform an action on an entry.
+	 * @param event The event.
+	 */
 	private void changeViewEvent(ActionEvent event) {
 		PatientEntry selectedItem = table.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
@@ -231,6 +327,10 @@ public class PatientQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * This is the event handler which is called when the user tries to create a new patient entry.
+	 * @param event The event.
+	 */
 	private void createEvent(ActionEvent event) {
 		manager.pushNewNode(new PatientCreateView(manager));
 	}

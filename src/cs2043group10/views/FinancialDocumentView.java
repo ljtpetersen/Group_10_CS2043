@@ -1,5 +1,9 @@
 package cs2043group10.views;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
+
 import cs2043group10.DatabaseException;
 import cs2043group10.IReversable;
 import cs2043group10.IReversableManager;
@@ -8,19 +12,64 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
+/**
+ * This is the view which allows one to observe a financial document's contents.
+ * 
+ * @author James Petersen
+ * @author Boluwatife Oduntan
+ */
 public class FinancialDocumentView implements IReversable {
+	/**
+	 * The data to be displayed.
+	 */
 	private FinancialDocument data;
+	/**
+	 * The id of the document whose data is to be displayed.
+	 */
 	private final int documentId;
+	/**
+	 * The manager within which this view resides.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The node which contains the data.
+	 */
 	private static GridPane view;
+	/**
+	 * The label which contains the title.
+	 */
 	private static Label titleLabel;
+	/**
+	 * The label which contains the document's id.
+	 */
 	private static Label documentIdLabel;
+	/**
+	 * The label which contains the patient's id.
+	 */
 	private static Label patientIdLabel;
+	/**
+	 * The label which contains the amount that will be added.
+	 */
 	private static Label amountLabel;
+	/**
+	 * The label which contains the description of the document.
+	 */
 	private static Label descriptionLabel;
+	/**
+	 * The label which contains the time and date the document was created.
+	 */
 	private static Label createdAtLabel;
+	/**
+	 * The label which contains the amount the patient will have to pay, if applicable.
+	 */
 	private static Label amountPaidLabel;
 
+	/**
+	 * Create a new financial document view from a corrsponding id.
+	 * @param manager The manager within which the view resides.
+	 * @param documentId The id of the document to be displayed.
+	 * @throws DatabaseException
+	 */
 	public FinancialDocumentView(IReversableManager manager, int documentId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryFinancialDocument(documentId);
 		this.documentId = documentId;
@@ -30,6 +79,11 @@ public class FinancialDocumentView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Create a new financial document view using some data.
+	 * @param manager The manager within which the view resides.
+	 * @param data The data to be displayed.
+	 */
 	public FinancialDocumentView(IReversableManager manager, FinancialDocument data) {
 		this.data = data;
 		this.manager = manager;
@@ -39,6 +93,9 @@ public class FinancialDocumentView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Create the view associated with this class.
+	 */
 	private static void createView() {
         view = new GridPane();
         view.setVgap(10);
@@ -63,7 +120,7 @@ public class FinancialDocumentView implements IReversable {
 		patientIdLabel.setText("Patient ID: " + data.patientId);
 		amountLabel.setText("Amount: $" + data.amount);
 		descriptionLabel.setText("Description: " + data.description);
-		createdAtLabel.setText("Created At: " + data.createTimestamp);
+		createdAtLabel.setText("Created At: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.createTimestamp), TimeZone.getDefault().toZoneId()));
 		if (data.amountPaid.isPresent()) {
 			amountPaidLabel.setText("Amount Paid: $" + data.amountPaid.get());
 		} else {

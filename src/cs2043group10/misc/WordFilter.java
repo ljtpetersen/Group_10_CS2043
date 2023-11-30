@@ -3,22 +3,49 @@ package cs2043group10.misc;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
+/**
+ * This class represents a filter which is applied to a string.
+ * 
+ * @author James Petersen
+ */
 public class WordFilter {
-	String currentFilter = "";
-	String[] words = new String[0];
+	/**
+	 * This represents the current filter string.
+	 */
+	private String currentFilter = "";
+	/**
+	 * This represents the words obtained from the filter.
+	 */
+	private String[] words = new String[0];
 	
+	/**
+	 * Construct a new filter with an empty filter.
+	 */
 	public WordFilter() {}
 	
+	/**
+	 * Get the current filter.
+	 * @return The current filter.
+	 */
 	public String getCurrentFilter() {
 		return currentFilter;
 	}
 	
+	/**
+	 * Set the current filter.
+	 * @param filter The new filter.
+	 */
 	public void setCurrentFilter(String filter) {
 		currentFilter = filter;
 		String modified = filter.toLowerCase().replaceAll("[^a-z]", " ");
 		words = Arrays.stream(modified.split(" ")).filter(Predicate.not(String::isEmpty)).toArray(String[]::new);
 	}
 
+	/**
+	 * Test a string to see if it matches the filter.
+	 * @param t The string to test.
+	 * @return Whether the string matches the filter.
+	 */
 	public boolean test(String t) {
 		String mod = t.toLowerCase().replaceAll("[^a-z]", "");
 		for (int i = 0; i < words.length; ++i) {
@@ -29,23 +56,16 @@ public class WordFilter {
 		return true;
 	}
 	
+	/**
+	 * Test an array of strings to see if any of the members match the filter.
+	 * @param t The array of strings
+	 * @return Whether the array matches the filter.
+	 */
 	public boolean test(String[] t) {
-		String[] mod = new String[t.length];
+		String accum = "";
 		for (int i = 0; i < t.length; ++i) {
-			mod[i] = t[i].toLowerCase().replaceAll("[^a-z]", "");
+			accum += t[i].toLowerCase().replaceAll("[^a-z]", "");
 		}
-		for (int i = 0; i < words.length; ++i) {
-			boolean found = false;
-			for (int j = 0; j < mod.length; ++j) {
-				if (mod[j].contains(words[i])) {
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				return false;
-			}
-		}
-		return true;
+		return test(accum);
 	}
 }

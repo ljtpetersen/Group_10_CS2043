@@ -24,24 +24,82 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/**
+ * This is the view which allows the user to create and edit medical documents.
+ * 
+ * @author James Petersen
+ */
 public class MedicalCreateView implements IReversable {
+	/**
+	 * The title of the document.
+	 */
 	private String title;
+	/**
+	 * The type of the document.
+	 */
 	private String type;
+	/**
+	 * The body of the document.
+	 */
 	private String body;
+	/**
+	 * The auxiliary text of the document.
+	 */
 	private String auxiliary;
+	/**
+	 * The patient id corresponding to the document.
+	 */
 	private final int patientId;
+	/**
+	 * The document's id.
+	 */
 	private int documentId;
+	/**
+	 * The manager within which this view resides.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The node within which the form is contained.
+	 */
 	private static VBox view;
+	/**
+	 * The text within which the document's id will be displayed.
+	 */
 	private static Text id;
+	/**
+	 * The text within which the patient's id will be displayed.
+	 */
 	private static Text patientIdText;
+	/**
+	 * The field within which the user will enter the document's title.
+	 */
 	private static TextField titleField;
+	/**
+	 * The field within which the user will enter the document's type.
+	 */
 	private static TextField typeField;
+	/**
+	 * The field within which the user will enter the document's description.
+	 */
 	private static TextArea descriptionField;
+	/**
+	 * The field within the user will enter the document's auxiliary information.
+	 */
 	private static TextField auxiliaryField;
+	/**
+	 * The button the user will press when they wish to save what they have entered.
+	 */
 	private static Button saveButton;
+	/**
+	 * The text within which error information will be displayed.
+	 */
 	private static Text statusText;
 	
+	/**
+	 * Create a new medical create view with a corresponding patient id.
+	 * @param manager The manager within which this view resides.
+	 * @param patientId The id of the patient this document belongs to.
+	 */
 	public MedicalCreateView(IReversableManager manager, int patientId) {
 		this.patientId = patientId;
 		this.manager = manager;
@@ -51,6 +109,11 @@ public class MedicalCreateView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Create a new medical create view with corresponding data.
+	 * @param manager The manager within which this view resides.
+	 * @param data The data to create the view with.
+	 */
 	public MedicalCreateView(IReversableManager manager, MedicalDocument data) {
 		this.manager = manager;
 		patientId = data.patientId;
@@ -64,6 +127,9 @@ public class MedicalCreateView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Create the view associated with this class.
+	 */
 	private static void createView() {
 		view = new VBox(5);
 		
@@ -205,6 +271,10 @@ public class MedicalCreateView implements IReversable {
 	@Override
 	public void beforeHide() {}
 
+	/**
+	 * The event handler for when the user tries to save their changes.
+	 * @param event The event.
+	 */
 	private void saveEvent(ActionEvent event) {
 		String invalidAccum = "";
 		afterHide();

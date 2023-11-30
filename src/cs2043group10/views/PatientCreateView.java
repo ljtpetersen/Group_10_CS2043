@@ -27,24 +27,81 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
+/**
+ * This is the view which allows the user to edit a patient's information or create a new patient entry.
+ * 
+ * @author James Petersen
+ */
 public class PatientCreateView implements IReversable {
+	/**
+	 * This is the full name of the patient.
+	 */
 	private String fullName;
+	/**
+	 * This is the address of the patient.
+	 */
 	private String address;
+	/**
+	 * This is the insurance plan of the patient.
+	 */
 	private InsurancePlan insurance;
+	/**
+	 * This is the patient id of the patient. It is -1 if there is no corresponding entry yet.
+	 */
 	private int patientId;
+	/**
+	 * This is the date of birth of the patient.
+	 */
 	private LocalDate dateOfBirth;
+	/**
+	 * This is the manager which manages the view.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * This is the view within which the form is contained.
+	 */
 	private static VBox view;
+	/**
+	 * This is the field within which the user enters the patient's name.
+	 */
 	private static TextField nameField;
+	/**
+	 * This is the field within which the user enters the patient's address.
+	 */
 	private static TextField addressField;
+	/**
+	 * This is the text within which the patient's id is displayed.
+	 */
 	private static Text id;
+	/**
+	 * This is the field within which the user enters the patient's date of birth.
+	 */
 	private static DatePicker birthField;
+	/**
+	 * This is the field within which the user enters the patient's insurance deductible.
+	 */
 	private static TextField insuranceDeductibleField;
+	/**
+	 * This is the field within which the user enters the patient's insurace out of pocket maximum.
+	 */
 	private static TextField insuranceOutOfPocketMaximum;
+	/**
+	 * This is the field within which the user enters the patient's insurance cost share percentage.
+	 */
 	private static TextField insuranceCostSharePercentage;
+	/**
+	 * This is the button which the user presses when they wish to save the patient entry.
+	 */
 	private static Button saveButton;
+	/**
+	 * This is the status text upon which error messages are displayed.
+	 */
 	private static Text statusText;
 	
+	/**
+	 * Initialize a new patient create view with no patient information.
+	 * @param manager The manager within which the view resides.
+	 */
 	public PatientCreateView(IReversableManager manager) {
 		this.manager = manager;
 		this.patientId = -1;
@@ -52,7 +109,12 @@ public class PatientCreateView implements IReversable {
 			createView();
 		}
 	}
-	
+
+	/**
+	 * Initialize a new patient create view with the given patient information.
+	 * @param manager The manager within which the view resides.
+	 * @param data The data with which to initialize the view.
+	 */
 	public PatientCreateView(IReversableManager manager, PatientInformation data) {
 		fullName = data.fullName;
 		address = data.address;
@@ -65,6 +127,9 @@ public class PatientCreateView implements IReversable {
 		}
 	}
 	
+	/**
+	 * Initialize the view.
+	 */
 	private static void createView() {
 		view = new VBox(5);
 		
@@ -223,7 +288,7 @@ public class PatientCreateView implements IReversable {
 			deductible = -1;
 		}
 		try {
-			csp = (int)(Double.parseDouble(insuranceCostSharePercentage.getText()) * 100.0);
+			csp = Integer.parseInt(insuranceCostSharePercentage.getText());
 			if (csp > 100 || csp < 0) {
 				csp = -1;
 			}
@@ -287,6 +352,10 @@ public class PatientCreateView implements IReversable {
 	@Override
 	public void beforeHide() {}
 	
+	/**
+	 * This is the event handler which handles the user pressing the save button.
+	 * @param event The event.
+	 */
 	private void saveEvent(ActionEvent event) {
 		String invalidAccum = "";
 		afterHide();

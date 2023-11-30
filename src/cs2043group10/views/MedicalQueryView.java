@@ -33,24 +33,83 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+/**
+ * This is the view which shows a list of medical history entries and allows one to perform an action on them.
+ * 
+ * @author James Petersen
+ */
 public class MedicalQueryView implements IReversable {
+	/**
+	 * The patient whose medical history is to be queried.
+	 */
 	private final int patientId;
+	/**
+	 * The results of the query.
+	 */
 	private IQuery<MedicalEntry> data;
+	/**
+	 * The manager which manages this view.
+	 */
 	private final IReversableManager manager;
+	/**
+	 * The current filter on the entries.
+	 */
 	private WordFilter filter;
+	/**
+	 * The field within which to enter a filter.
+	 */
 	private static TextField searchField;
+	/**
+	 * The button to press to apply the filter.
+	 */
 	private static Button filterButton;
+	/**
+	 * The button to press to clear the filter.
+	 */
 	private static Button clearFilter;
+	/**
+	 * The button to press to view a selected entry.
+	 */
 	private static Button viewButton;
+	/**
+	 * The button to press to create an entry.
+	 */
 	private static Button createButton;
+	/**
+	 * The button to press to edit a selected entry.
+	 */
 	private static Button editButton;
+	/**
+	 * The view which contains the table.
+	 */
 	private static VBox view;
+	/**
+	 * The table which contains the entries.
+	 */
 	private static TableView<MedicalEntry> table;
+	/**
+	 * The list of entries the table relies on.
+	 */
 	private static ObservableList<MedicalEntry> list;
+	/**
+	 * The list after the filter has been applied.
+	 */
 	private static FilteredList<MedicalEntry> filteredList;
+	/**
+	 * The list after it has been sorted.
+	 */
 	private static SortedList<MedicalEntry> sortedList;
+	/**
+	 * The method to be called when an entry is double-clicked.
+	 */
 	private static Consumer<Integer> doubleClickHandler;
 	
+	/**
+	 * Initialize a new medical query view.
+	 * @param manager The manager within which the view resides.
+	 * @param patientId The id of the patient whose medical history is to be queried.
+	 * @throws DatabaseException
+	 */
 	public MedicalQueryView(IReversableManager manager, int patientId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryMedicalDocumentsUnderPatient(patientId);
 		this.patientId = patientId;
@@ -62,6 +121,9 @@ public class MedicalQueryView implements IReversable {
 	}
 	
 	@SuppressWarnings("unchecked")
+	/**
+	 * Create the view for this class.
+	 */
 	private static void createView() {
 		view = new VBox(5);
 		searchField = new TextField();
@@ -174,6 +236,10 @@ public class MedicalQueryView implements IReversable {
 	@Override
 	public void beforeHide() {}
 	
+	/**
+	 * The event handler which is called when the user tries to filter the query.
+	 * @param event The event.
+	 */
 	private void filterEvent(ActionEvent event) {
 		filter.setCurrentFilter(searchField.getText());
 		Predicate<? super MedicalEntry> pred = filteredList.getPredicate();
@@ -181,11 +247,19 @@ public class MedicalQueryView implements IReversable {
 		filteredList.setPredicate(pred);
 	}
 	
+	/**
+	 * The event handler which is called when the user tries to clear the filter.
+	 * @param event The event.
+	 */
 	private void clearFilterEvent(ActionEvent event) {
 		searchField.setText("");
 		filterEvent(event);
 	}
 	
+	/**
+	 * The method which is called when the user tries to view a certain entry.
+	 * @param id The id of the entry.
+	 */
 	private void viewEntry(Integer id) {
 		try {
 			MedicalDocument data = manager.getDatabaseManager().queryMedicalDocument(id);
@@ -195,6 +269,10 @@ public class MedicalQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The method which is called when the user tries to edit a certain entry.
+	 * @param id The id of the entry.
+	 */
 	private void editEntry(Integer id) {
 		try {
 			MedicalDocument data = manager.getDatabaseManager().queryMedicalDocument(id);
@@ -204,6 +282,10 @@ public class MedicalQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The event handler which is called when the user tries to perform an action on an entry.
+	 * @param event The event.
+	 */
 	private void changeViewEvent(ActionEvent event) {
 		MedicalEntry selectedItem = table.getSelectionModel().getSelectedItem();
 		if (selectedItem == null) {
@@ -217,6 +299,10 @@ public class MedicalQueryView implements IReversable {
 		}
 	}
 	
+	/**
+	 * The event handler which is called when the user tries to create a new entry.
+	 * @param event The event.
+	 */
 	private void createEvent(ActionEvent event) {
 		manager.pushNewNode(new MedicalCreateView(manager, patientId));
 	}
