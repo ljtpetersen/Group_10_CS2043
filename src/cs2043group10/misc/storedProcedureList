@@ -39,3 +39,12 @@ CREATE PROCEDURE createPatient(
     -> VALUES (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum);
     -> END //
 
+queryPatientsUnderDoctor:
+CREATE PROCEDURE queryPatientsUnderDoctor(
+    -> IN doctorId INT(11)
+    -> )
+    -> BEGIN
+    -> SELECT * FROM patients
+    -> WHERE doctorId = doctorId;
+	-> END //
+

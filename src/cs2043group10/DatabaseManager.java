@@ -247,7 +247,22 @@ public class DatabaseManager implements IDatabase {
 	
 	@Override
 	public IQuery<PatientQuery.PatientEntry> queryPatientsUnderDoctor(int doctorId) throws DatabaseException {
-		// TODO
+		try {
+			// Create the executable SQL statement
+			String call = "{CALL queryPatientsUnderDoctor(?)}";
+			
+			// Sets parameter(s) for stored procedure call
+			CallableStatement procedureCall = connector.prepareCall(call);
+			procedureCall.setInt(1, doctorId);
+			
+			// Executes stored procedure
+			ResultSet resultSet = procedureCall.executeQuery();
+			
+			
+			
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
 		return null;
 	}
 	
