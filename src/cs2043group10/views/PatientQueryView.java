@@ -1,5 +1,6 @@
 package cs2043group10.views;
 
+import java.time.LocalDate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -153,9 +154,15 @@ public class PatientQueryView implements IReversable {
 		nameColumn.setCellValueFactory(p -> new ReadOnlyObservableValue<String>(p.getValue().name));
 		nameColumn.setEditable(false);
 		nameColumn.setSortable(true);
-		nameColumn.prefWidthProperty().bind(table.widthProperty().multiply(5).divide(6));
-		idColumn.prefWidthProperty().bind(table.widthProperty().divide(6));
-		table.getColumns().setAll(idColumn, nameColumn);
+		TableColumn<PatientEntry, LocalDate> dobColumn = new TableColumn<PatientEntry, LocalDate>("Date of Birth");
+		dobColumn.setCellValueFactory(p -> new ReadOnlyObservableValue<LocalDate>(p.getValue().dateOfBirth));
+		dobColumn.setEditable(false);
+		dobColumn.setSortable(true);
+		TableColumn<PatientEntry, String> addressColumn = new TableColumn<PatientEntry, String>("Address");
+		addressColumn.setCellValueFactory(p -> new ReadOnlyObservableValue<String>(p.getValue().address));
+		addressColumn.setEditable(false);
+		addressColumn.setSortable(true);
+		table.getColumns().setAll(idColumn, nameColumn, dobColumn, addressColumn);
 		
 		view.getChildren().add(table);
 		
@@ -191,7 +198,7 @@ public class PatientQueryView implements IReversable {
 	@Override
 	public void beforeShow() {
 		list.setAll(data.getEntries());
-		filteredList.setPredicate(e -> filter.test(e.name));
+		filteredList.setPredicate(e -> filter.test(e.name, e.address, e.dateOfBirth.toString()));
 		searchField.setText(filter.getCurrentFilter());
 		searchField.setOnAction(this::filterEvent);
 		filterButton.setOnAction(this::filterEvent);

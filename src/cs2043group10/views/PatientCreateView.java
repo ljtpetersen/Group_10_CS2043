@@ -148,7 +148,7 @@ public class PatientCreateView implements IReversable {
 		
 		Label addressLabel = new Label("Address: ");
 		addressField = new TextField();
-		addressField.setPromptText("# Street, City, Province/State, Country");
+		addressField.setPromptText("# Street, City, Province/State, Country, Postal Code");
 		addressField.setMinWidth(500);
 		addressField.setMaxWidth(500);
 		addressLabel.setLabelFor(addressField);
@@ -254,7 +254,7 @@ public class PatientCreateView implements IReversable {
 			if (insurance.costSharePercentage < 0) {
 				insuranceCostSharePercentage.setText("");
 			} else {
-				insuranceCostSharePercentage.setText(Double.toString(insurance.costSharePercentage / 100.0));
+				insuranceCostSharePercentage.setText(Integer.toString(insurance.costSharePercentage));
 			}
 			if (insurance.deductible < 0) {
 				insuranceDeductibleField.setText("");
@@ -396,6 +396,8 @@ public class PatientCreateView implements IReversable {
 				} else {
 					manager.getDatabaseManager().updatePatient(data);
 				}
+				manager.goBackwards();
+				manager.refresh();
 			} catch (DatabaseException e) {
 				e.display();
 			}

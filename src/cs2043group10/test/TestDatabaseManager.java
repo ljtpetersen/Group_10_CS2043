@@ -107,7 +107,7 @@ public class TestDatabaseManager implements IDatabase {
 		if (doctorId != 0) {
 			throw new DatabaseException("No doctor with id " + doctorId);
 		}
-		return new PatientQuery(patients.stream().map((p) -> new PatientQuery.PatientEntry(p.fullName, p.patientId)).toArray(PatientQuery.PatientEntry[]::new));
+		return new PatientQuery(patients.stream().map((p) -> new PatientQuery.PatientEntry(p.fullName, p.patientId, p.dateOfBirth, p.address)).toArray(PatientQuery.PatientEntry[]::new));
 	}
 	
 	@Override

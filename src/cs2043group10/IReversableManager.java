@@ -40,4 +40,8 @@ public interface IReversableManager {
 	 * @return Whether it is at the top of the stack.
 	 */
 	public boolean isAtTop(IReversable node);
+	/**
+	 * Trigger the refresh event on the current node.
+	 */
+	public void refresh();
 }

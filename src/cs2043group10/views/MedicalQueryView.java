@@ -192,7 +192,7 @@ public class MedicalQueryView implements IReversable {
 	@Override
 	public void beforeShow() {
 		list.setAll(data.getEntries());
-		filteredList.setPredicate(e -> filter.test(new String[] { e.title, e.type }));
+		filteredList.setPredicate(e -> filter.test(e.title, e.type));
 		searchField.setText(filter.getCurrentFilter());
 		searchField.setOnAction(this::filterEvent);
 		filterButton.setOnAction(this::filterEvent);

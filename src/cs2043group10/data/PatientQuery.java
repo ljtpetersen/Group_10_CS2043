@@ -1,5 +1,6 @@
 package cs2043group10.data;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -31,10 +32,14 @@ public class PatientQuery implements IQuery<PatientQuery.PatientEntry> {
 	public static class PatientEntry {
 		public final String name;
 		public final int id;
+		public final LocalDate dateOfBirth;
+		public final String address;
 		
-		public PatientEntry(String name, int id) {
+		public PatientEntry(String name, int id, LocalDate dateOfBirth, String address) {
 			this.name = name;
 			this.id = id;
+			this.address = address;
+			this.dateOfBirth = dateOfBirth;
 		}
 		
 		public String getName() {

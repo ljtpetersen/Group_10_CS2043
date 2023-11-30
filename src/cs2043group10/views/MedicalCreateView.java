@@ -300,6 +300,8 @@ public class MedicalCreateView implements IReversable {
 				} else {
 					manager.getDatabaseManager().updateMedicalDocument(data);
 				}
+				manager.goBackwards();
+				manager.refresh();
 			} catch (DatabaseException e) {
 				e.display();
 			}

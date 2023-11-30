@@ -118,11 +118,11 @@ public class FinancialDocumentView implements IReversable {
 		titleLabel.setText("Title: " + data.title);
 		documentIdLabel.setText("Document ID: " + data.documentId);
 		patientIdLabel.setText("Patient ID: " + data.patientId);
-		amountLabel.setText("Amount: $" + data.amount);
+		amountLabel.setText("Amount: $" + data.amount / 100.0);
 		descriptionLabel.setText("Description: " + data.description);
 		createdAtLabel.setText("Created At: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.createTimestamp), TimeZone.getDefault().toZoneId()));
 		if (data.amountPaid.isPresent()) {
-			amountPaidLabel.setText("Amount Paid: $" + data.amountPaid.get());
+			amountPaidLabel.setText("Amount Paid: $" + data.amountPaid.get() / 100.0);
 		} else {
 			amountPaidLabel.setText("");
 		}

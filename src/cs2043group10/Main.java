@@ -310,6 +310,11 @@ public class Main extends Application implements IReversableManager {
 	 * @param event The event.
 	 */
 	private void refreshEvent(ActionEvent event) {
+		refresh();
+	}
+	
+	@Override
+	public void refresh() {
 		if (databaseManager.getLoginClass() == LoginClass.NOT_LOGGED_IN) {
 			loginPrompt.refresh();
 		} else {

@@ -387,6 +387,8 @@ public class FinancialCreateView implements IReversable {
 				} else {
 					statusText.setText("Cannot modify financial document.");
 				}
+				manager.goBackwards();
+				manager.refresh();
 			} catch (DatabaseException e) {
 				e.display();
 			}

@@ -37,7 +37,7 @@ public class WordFilter {
 	 */
 	public void setCurrentFilter(String filter) {
 		currentFilter = filter;
-		String modified = filter.toLowerCase().replaceAll("[^a-z]", " ");
+		String modified = filter.toLowerCase().replaceAll("[^a-z0-9]", " ");
 		words = Arrays.stream(modified.split(" ")).filter(Predicate.not(String::isEmpty)).toArray(String[]::new);
 	}
 
@@ -47,7 +47,7 @@ public class WordFilter {
 	 * @return Whether the string matches the filter.
 	 */
 	public boolean test(String t) {
-		String mod = t.toLowerCase().replaceAll("[^a-z]", "");
+		String mod = t.toLowerCase().replaceAll("[^a-z0-9]", "");
 		for (int i = 0; i < words.length; ++i) {
 			if (!mod.contains(words[i])) {
 				return false;
@@ -57,14 +57,14 @@ public class WordFilter {
 	}
 	
 	/**
-	 * Test an array of strings to see if any of the members match the filter.
-	 * @param t The array of strings
+	 * Test several strings to see if any of them match the filter.
+	 * @param t The strings.
 	 * @return Whether the array matches the filter.
 	 */
-	public boolean test(String[] t) {
+	public boolean test(String... t) {
 		String accum = "";
 		for (int i = 0; i < t.length; ++i) {
-			accum += t[i].toLowerCase().replaceAll("[^a-z]", "");
+			accum += t[i].toLowerCase().replaceAll("[^a-z0-9]", "");
 		}
 		return test(accum);
 	}
