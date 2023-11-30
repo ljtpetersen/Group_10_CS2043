@@ -336,11 +336,6 @@ public class DatabaseManager implements IDatabase {
 	}
 	
 	@Override
-	public void updateFinancialDocument(FinancialDocument document) throws DatabaseException {
-		// TODO
-	}
-
-	@Override
 	public boolean verifyCredentials(int id, String password) throws DatabaseException {
 		// Create the executable SQL statement
 		String call = "{CALL verifyCredentials(?,?)}";

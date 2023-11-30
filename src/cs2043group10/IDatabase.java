@@ -27,6 +27,5 @@ public interface IDatabase {
 	public int createMedicalDocument(MedicalDocument document) throws DatabaseException;
 	public void updatePatient(PatientInformation information) throws DatabaseException;
 	public void updateMedicalDocument(MedicalDocument document) throws DatabaseException;
-	public void updateFinancialDocument(FinancialDocument document) throws DatabaseException;
 	public boolean verifyCredentials(int id, String password) throws DatabaseException;
 }

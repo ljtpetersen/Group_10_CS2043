@@ -198,10 +198,4 @@ public class TestDatabaseManager implements IDatabase {
 		}
 		return false;
 	}
-
-	@Override
-	public void updateFinancialDocument(FinancialDocument document) throws DatabaseException {
-		// TODO Auto-generated method stub
-		
-	}
 }
