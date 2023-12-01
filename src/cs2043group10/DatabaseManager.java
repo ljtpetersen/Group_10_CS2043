@@ -1,31 +1,6 @@
-
 package cs2043group10;
 
-import java.security.NoSuchAlgorithmException;
 
-import cs2043group10.data.FinancialDocument;
-import cs2043group10.data.FinancialQuery;
-import cs2043group10.data.LoginClass;
-import cs2043group10.data.MedicalDocument;
-import cs2043group10.data.MedicalQuery;
-import cs2043group10.data.PatientInformation;
-import cs2043group10.data.PatientQuery;
-import cs2043group10.misc.PasswordHasher;
-import cs2043group10.data.IQuery;
-import cs2043group10.data.InsurancePlan;
-import java.util.Optional;
-
-// Imports required for connecting to the database
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.sql.CallableStatement;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.ResultSet;
-
-public class DatabaseManager implements IDatabase {package cs2043group10;
 
 
 
@@ -43,65 +18,7 @@ import cs2043group10.data.MedicalDocument;
 
 import cs2043group10.data.MedicalQuery;
 
-import cs2043group10.data.PatientInformation;
-
-import cs2043group10.data.PatientQuery;
-
-import cs2043group10.data.PatientQuery.PatientEntry;
-
-import cs2043group10.misc.PasswordHasher;
-
-import cs2043group10.data.IQuery;
-
-import cs2043group10.data.InsurancePlan;
-
-import java.util.Optional;
-
-
-
-// Imports required for connecting to the database
-
-import java.sql.Connection;
-
-import java.sql.DriverManager;
-
-import java.sql.SQLException;
-
-import java.time.LocalDate;
-
-import java.sql.CallableStatement;
-
-import java.math.BigDecimal;
-
-import java.sql.Date;
-
-import java.sql.ResultSet;
-
-
-
-// Import for ArrayLists
-
-import java.util.ArrayList;
-
-
-
-public class DatabaseManager implements IDatabase {package cs2043group10;
-
-
-
-import java.security.NoSuchAlgorithmException;
-
-
-
-import cs2043group10.data.FinancialDocument;
-
-import cs2043group10.data.FinancialQuery;
-
-import cs2043group10.data.LoginClass;
-
-import cs2043group10.data.MedicalDocument;
-
-import cs2043group10.data.MedicalQuery;
+import cs2043group10.data.MedicalQuery.MedicalEntry;
 
 import cs2043group10.data.PatientInformation;
 
@@ -679,9 +596,89 @@ public class DatabaseManager implements IDatabase {
 
 	public IQuery<MedicalQuery.MedicalEntry> queryMedicalDocumentsUnderPatient(int patientId) throws DatabaseException {
 
-		// TODO
+		try {
 
-		return null;
+			// Create the executable SQL statement
+
+			String call = "{CALL queryMedicalDocumentsUnderPatient(?)}";
+
+			
+
+			// Sets parameter(s) for stored procedure call
+
+			CallableStatement procedureCall = connector.prepareCall(call);
+
+			procedureCall.setInt(1, patientId);
+
+			
+
+			// Executes stored procedure
+
+			ResultSet resultSet = procedureCall.executeQuery();
+
+			
+
+			// Declare medical entry contents
+
+			long createTimeStamp;
+
+			long modifyTimeStamp;
+
+			String title;
+
+			String type;
+
+			int documentId;
+
+			
+
+			// Create ArrayList to store reports under patient
+
+			ArrayList<MedicalEntry> reportList = new ArrayList<>();
+
+			
+
+			// Process the result set
+
+			if (resultSet.next()) {
+
+				createTimeStamp = resultSet.getLong("createTimeStamp");
+
+				modifyTimeStamp = resultSet.getLong("modifyTimeStamp");
+
+				title = resultSet.getString("title");
+
+				type = resultSet.getString("type");
+
+				documentId = resultSet.getInt("id");
+
+				MedicalEntry medicalEntry = new MedicalEntry(createTimeStamp, modifyTimeStamp, title, type, documentId);
+
+				reportList.add(medicalEntry);
+
+			} else {
+
+				throw new DatabaseException("No reports under patient with id " + patientId);
+
+			}
+
+			
+
+			// Convert ArrayList to array
+
+			MedicalEntry[] reportsArray = reportList.toArray(new MedicalEntry[0]);
+
+			
+
+			MedicalQuery reportsUnderPatient = new MedicalQuery(patientId, reportsArray);
+
+			return reportsUnderPatient;
+
+		} catch (SQLException e) {
+
+			throw new DatabaseException(e);
+
+		}
 
 	}
 
@@ -691,9 +688,17 @@ public class DatabaseManager implements IDatabase {
 
 	public IQuery<FinancialQuery.FinancialEntry> queryFinancialDocumentsUnderPatient(int patientId) throws DatabaseException {
 
-		// TODO
+		try {
 
-		return null;
+			
+
+			return null;
+
+		} catch (SQLException e) {
+
+			throw new DatabaseException(e);
+
+		}
 
 	}
 

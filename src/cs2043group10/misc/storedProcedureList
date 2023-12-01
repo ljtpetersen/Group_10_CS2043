@@ -40,20 +40,15 @@ CREATE PROCEDURE createPatient(
     -> END //
 
 queryPatientsUnderDoctor:
-
 CREATE PROCEDURE queryPatientsUnderDoctor(
-
     -> IN doctorId INT(11)
-
     -> )
-
     -> BEGIN
-
     -> SELECT name, address, id, dateOfBirth
-
     -> FROM patients
-
     -> WHERE doctorId = doctorId;
-
     -> END //
+    
+queryMedicalDocumentsUnderPatient:
+CREATE PROCEDURE queryMedicalDocumentsUnderPatient(  IN patientId INT(11) ) BEGIN SELECT createTimeStamp, modifyTimeStamp, title, type, id FROM report WHERE patientId = patientId; END//
 
