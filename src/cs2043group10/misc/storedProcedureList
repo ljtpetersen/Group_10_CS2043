@@ -40,11 +40,20 @@ CREATE PROCEDURE createPatient(
     -> END //
 
 queryPatientsUnderDoctor:
+
 CREATE PROCEDURE queryPatientsUnderDoctor(
+
     -> IN doctorId INT(11)
+
     -> )
+
     -> BEGIN
-    -> SELECT * FROM patients
+
+    -> SELECT name, address, id, dateOfBirth
+
+    -> FROM patients
+
     -> WHERE doctorId = doctorId;
-	-> END //
+
+    -> END //
 
