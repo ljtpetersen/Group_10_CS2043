@@ -369,7 +369,7 @@ public class DatabaseManager implements IDatabase {
 				createTimeStamp = resultSet.getLong("createTimestamp");
 				title = resultSet.getString("title");
 				documentId = resultSet.getInt("id");
-				title = resultSet.getString("title");
+				amount = resultSet.getLong("amount");
 				FinancialEntry financialEntry = new FinancialEntry(title, createTimeStamp, amount, documentId);
 				transactionList.add(financialEntry);
 			} else {
@@ -399,10 +399,10 @@ public class DatabaseManager implements IDatabase {
 		int id = information.patientId;
 		LocalDate dateOfBirth = information.dateOfBirth;
 		int doctorId = information.doctorId;
-		int totalAmountDue = information.totalAmountOwed;
-		int insuranceDeductible = information.insurance.insuranceDeductible;
-		int insuranceCostSharePercentage = information.insurance.insuranceCostSharePercentage;
-		int insuranceOutOfPocketMaximum = information.insurance.insuranceOutOfPocketMaximum;
+		int totalAmountDue = information.totalMoneyOwed;
+		int insuranceDeductible = information.insurance.deductible;
+		int insuranceCostSharePercentage = information.insurance.costSharePercentage;
+		int insuranceOutOfPocketMaximum = information.insurance.outOfPocketMaximum;
 
 		// Create patient in patient table with stored procedure
 		String call = "{CALL createPatient(?,?,?,?,?,?,?,?,?)}";
