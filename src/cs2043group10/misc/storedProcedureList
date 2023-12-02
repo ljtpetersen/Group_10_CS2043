@@ -52,3 +52,13 @@ CREATE PROCEDURE queryPatientsUnderDoctor(
 queryMedicalDocumentsUnderPatient:
 CREATE PROCEDURE queryMedicalDocumentsUnderPatient(  IN patientId INT(11) ) BEGIN SELECT createTimeStamp, modifyTimeStamp, title, type, id FROM report WHERE patientId = patientId; END//
 
+queryFinancialDocumentsUnderPatient:
+CREATE PROCEDURE queryFinancialDocumentsUnderPatient( 
+    -> IN patientId INT(11)
+    -> )
+    -> BEGIN
+    -> SELECT createTimeStamp, title, id, amount
+    -> FROM transactions
+    -> WHERE patientId = patientId;
+    -> END //
+
