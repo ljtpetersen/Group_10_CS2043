@@ -33,12 +33,16 @@ public class DatabaseManager implements IDatabase {
 	private final PasswordHasher hasher;
 	private final Connection connector;
 	
-	public DatabaseManager(IReversableManager manager) throws NoSuchAlgorithmException, DatabaseException  {
+	public DatabaseManager(IReversableManager manager) throws DatabaseException  {
 		this.manager = manager;
 		loggedInId = -1;
 		loginClass = LoginClass.NOT_LOGGED_IN;
 		loggedInName = null;
-		hasher = new PasswordHasher();
+		try {
+			hasher = new PasswordHasher(); 
+		} catch (NoSuchAlgorithmException e) {
+			throw new DatabaseException(e);
+		}
 		
 		try
        {   // Connect to the database

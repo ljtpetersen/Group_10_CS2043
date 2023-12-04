@@ -1,17 +1,41 @@
 package cs2043group10.views;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
+
 import cs2043group10.DatabaseException;
 import cs2043group10.IReversable;
 import cs2043group10.IReversableManager;
 import cs2043group10.data.PatientInformation;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 public class PatientDocumentView implements IReversable {
 	private PatientInformation data;
 	private final int patientId;
-	private static GridPane view;
+	private static VBox view;
 	private final IReversableManager manager;
+	private static Label patientNameLabel;
+	private static Label dateOfBirthLabel;
+	private static Label addressLabel;
+	private static Label insuranceStatusLabel;
+	private static Label totalMoneyOwedLabel;
+	private static Label idLabel;
+	private static Label createLabel;
+	private static Label modifyLabel;
+	private static Label doctorIdLabel;
+	private static Button edit;
+	private static Button viewMedicalDocuments;
+	private static Button viewFinancialDocuments;
+
 	
 	public PatientDocumentView(IReversableManager manager, int patientId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryPatientInformation(patientId);
@@ -32,32 +56,44 @@ public class PatientDocumentView implements IReversable {
 	}
 	
 	private static void createView() {
-	view = new GridPane();
-        view.setPadding(new Insets(10));
-        view.setHgap(10);
-        view.setVgap(5);
+		view = new VBox(5);
+		view.setPadding(new Insets(10));
 
-        
-        Label patientNameLabel = new Label("Patient Name: " + data.getPatientName());
-        Label dateOfBirthLabel = new Label("Date of Birth: " + data.getDateOfBirth());
-        Label addressLabel = new Label("Address: " + data.getAddress());
-        Label medicalHistoryLabel = new Label("Medical History: " + data.getMedicalHistory());
-        Label insuranceStatusLabel = new Label("Insurance Status: " + data.getInsuranceStatus());
+		patientNameLabel = new Label();
+		dateOfBirthLabel = new Label();
+		addressLabel = new Label();
+		insuranceStatusLabel = new Label();
+		totalMoneyOwedLabel = new Label();
+		idLabel = new Label();
+		createLabel = new Label();
+		modifyLabel = new Label();
+		doctorIdLabel = new Label();
 
-       
-        view.addRow(0, patientNameLabel);
-        view.addRow(1, dateOfBirthLabel);
-        view.addRow(2, addressLabel);
-        view.addRow(3, medicalHistoryLabel);
-        view.addRow(4, insuranceStatusLabel);
-    }
-}
+		edit = new Button("Edit");
+		viewMedicalDocuments = new Button("View Medical History");
+		viewFinancialDocuments = new Button("View Financial History");
+		HBox box = new HBox(5);
+		Region r = new Region();
+		box.getChildren().addAll(r, edit, viewMedicalDocuments, viewFinancialDocuments);
+		HBox.setHgrow(r, Priority.ALWAYS);
+
+		view.getChildren().addAll(patientNameLabel, dateOfBirthLabel, addressLabel, insuranceStatusLabel, totalMoneyOwedLabel, idLabel, createLabel, modifyLabel, doctorIdLabel, box);
 	}
 
 	@Override
 	public void beforeShow() {
-		// Set event handlers.
-		// check loginclass and disable/enable buttons (eg edit button)
+		patientNameLabel.setText("Full name: " + data.fullName);
+		dateOfBirthLabel.setText("Date of birth: " + data.dateOfBirth.toString());
+		addressLabel.setText("Address: " + data.address);
+		insuranceStatusLabel.setText("Insurance Information: " + data.insurance.toString());
+		totalMoneyOwedLabel.setText("Total Money Owed: $" + data.totalMoneyOwed);
+		idLabel.setText("Id: " + data.patientId);
+		createLabel.setText("Created: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.createTimestamp), TimeZone.getDefault().toZoneId()));
+		modifyLabel.setText("Last Modified: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.modifyTimestamp), TimeZone.getDefault().toZoneId()));
+		doctorIdLabel.setText("Doctor Id: " + data.doctorId);
+		edit.setOnAction(this::onEdit);
+		viewMedicalDocuments.setOnAction(this::onMedicalHistory);
+		viewFinancialDocuments.setOnAction(this::onFinancialHistory);
 	}
 
 	@Override
@@ -74,25 +110,42 @@ public class PatientDocumentView implements IReversable {
 	}
 
 	@Override
-	public void destroy() {
-		
-	}
+	public void destroy() {}
 
 	@Override
 	public void refresh() {
-		// TODO Auto-generated method stub
-		
+		try {
+			data = manager.getDatabaseManager().queryPatientInformation(patientId);
+			beforeShow();
+		} catch (DatabaseException e) {
+			e.display();
+		}
 	}
 
 	@Override
-	public void afterShow() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void afterShow() {}
 
 	@Override
-	public void beforeHide() {
-		// TODO Auto-generated method stub
-		
+	public void beforeHide() {}
+
+	private void onEdit(ActionEvent event) {
+		refresh();
+		manager.pushNewNode(new PatientCreateView(manager, data));
+	}
+
+	private void onMedicalHistory(ActionEvent event) {
+		try {
+			manager.pushNewNode(new MedicalQueryView(manager, patientId));
+		} catch (DatabaseException e) {
+			e.display();
+		}
+	}
+
+	private void onFinancialHistory(ActionEvent event) {
+		try {
+			manager.pushNewNode(new FinancialQueryView(manager, patientId));
+		} catch (DatabaseException e) {
+			e.display();
+		}
 	}
 }

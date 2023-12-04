@@ -94,7 +94,13 @@ public class Main extends Application implements IReversableManager {
 		auxiliaryText = new Text("");
 		
 		//databaseManager = new DatabaseManager(this);
-		databaseManager = new TestDatabaseManager(this);
+		try {
+			databaseManager = new DatabaseManager(this);
+		} catch (DatabaseException e) {
+			e.display();
+			return;
+		}
+		//databaseManager = new TestDatabaseManager(this);
 		
 		primaryPane.setHgap(4);
 		primaryPane.setVgap(8);
