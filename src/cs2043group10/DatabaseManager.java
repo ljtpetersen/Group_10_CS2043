@@ -15,18 +15,16 @@ import cs2043group10.data.IQuery;
 import cs2043group10.data.InsurancePlan;
 import java.util.Optional;
 import java.sql.Date;
-import java.time.ZoneId;
 // Imports required for connecting to the database
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.CallableStatement;
-import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.ResultSet;
 // Import for ArrayLists
 import java.util.ArrayList;
+import java.util.Arrays;
 public class DatabaseManager implements IDatabase {
 	private int loggedInId;
 	private String loggedInName;
@@ -159,7 +157,6 @@ public class DatabaseManager implements IDatabase {
 			String body;
 			String auxiliary;
 			int patientId;
-			int id;
 			Long createTimeStamp;
 			Long modifyTimeStamp;
 			// Process the result set
@@ -170,7 +167,6 @@ public class DatabaseManager implements IDatabase {
 				body = resultSet.getString("body");
 				auxiliary = resultSet.getString("auxiliary");
 				patientId = resultSet.getInt("patientId");
-				id = resultSet.getInt("id");
 				createTimeStamp = resultSet.getLong("createTimestamp");
 				modifyTimeStamp = resultSet.getLong("modifyTimestamp");
 			} else {
@@ -372,7 +368,6 @@ public class DatabaseManager implements IDatabase {
 		try {
 			String name = information.fullName;
 			String address = information.address;
-			int id = information.patientId;
 			LocalDate dateOfBirth = information.dateOfBirth;
 			Date dateOfBirthNotLocal;
 			dateOfBirthNotLocal = Date.valueOf(dateOfBirth);
@@ -382,21 +377,21 @@ public class DatabaseManager implements IDatabase {
 			int insuranceCostSharePercentage = information.insurance.costSharePercentage;
 			int insuranceOutOfPocketMaximum = information.insurance.outOfPocketMaximum;
 			// Create patient in patient table with stored procedure
-			String call = "{CALL createPatient(?,?,?,?,?,?,?,?,?)}";
+			String call = "{CALL createPatient(?,?,?,?,?,?,?,?)}";
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setString(1, name);
 			procedureCall.setString(2, address);
-			procedureCall.setInt(3, id);
-			procedureCall.setDate(4, dateOfBirthNotLocal);
-			procedureCall.setInt(5, doctorId);
-			procedureCall.setInt(6, totalAmountDue);
-			procedureCall.setInt(7, insuranceDeductible);
-			procedureCall.setInt(8, insuranceCostSharePercentage);
-			procedureCall.setInt(9, insuranceOutOfPocketMaximum);
+			procedureCall.setDate(3, dateOfBirthNotLocal);
+			procedureCall.setInt(4, doctorId);
+			procedureCall.setInt(5, totalAmountDue);
+			procedureCall.setInt(6, insuranceDeductible);
+			procedureCall.setInt(7, insuranceCostSharePercentage);
+			procedureCall.setInt(8, insuranceOutOfPocketMaximum);
 			
-			int affectedRows = procedureCall.executeUpdate();
-			return id;
+			procedureCall.executeUpdate();
+			ResultSet res = procedureCall.executeQuery();
+			return res.getInt("id");
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -406,7 +401,6 @@ public class DatabaseManager implements IDatabase {
 	public int createFinancialDocument(FinancialDocument document) throws DatabaseException {
 		try {
 			// Initialize attributes of transaction to enter
-			int id = document.documentId;
 			int patientId = document.patientId;
 			int amount = document.amount;
 			String description = document.description;
@@ -414,18 +408,18 @@ public class DatabaseManager implements IDatabase {
 			Optional<Integer> amountPaid = document.amountPaid;
 			int amountPaidInt = amountPaid.orElseThrow(() -> new IllegalStateException("Value is not present"));
 			// Create report in patient table with stored procedure
-			String call = "{CALL createTransaction(?,?,?,?,?,?)}";
+			String call = "{CALL createTransaction(?,?,?,?,?)}";
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setInt(1, patientId);
 			procedureCall.setString(2, description);
 			procedureCall.setString(3, title);
-			procedureCall.setInt(4, id);
-			procedureCall.setInt(5, amount);
-			procedureCall.setInt(6, amountPaidInt);
+			procedureCall.setInt(4, amount);
+			procedureCall.setInt(5, amountPaidInt);
 			
-			int affectedRows = procedureCall.executeUpdate();
-			return id;
+			procedureCall.executeUpdate();
+			ResultSet res = procedureCall.executeQuery();
+			return res.getInt("id");
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -435,14 +429,13 @@ public class DatabaseManager implements IDatabase {
 	public int createMedicalDocument(MedicalDocument document) throws DatabaseException {
 		try {
 			// Initialize attributes of report to enter
-			int id = document.documentId;
 			int patientId = document.patientId;
 			String type = document.type;
 			String title = document.title;
 			String body = document.body;
 			String auxiliary = document.auxiliary;
 			// Create patient in patient table with stored procedure
-			String call = "{CALL createReport(?,?,?,?,?,?)}";
+			String call = "{CALL createReport(?,?,?,?,?)}";
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setString(1, title);
@@ -450,10 +443,9 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setString(3, body);
 			procedureCall.setString(4, auxiliary);
 			procedureCall.setInt(5, patientId);
-			procedureCall.setInt(6, id);
 			
-			int affectedRows = procedureCall.executeUpdate();
-			return id;
+			procedureCall.executeUpdate();
+			return procedureCall.executeQuery().getInt("id");
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -487,7 +479,7 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setInt(8, insuranceCostSharePercentage);
 			procedureCall.setInt(9, insuranceOutOfPocketMaximum);
 			
-			int affectedRows = procedureCall.executeUpdate();
+			procedureCall.executeUpdate();
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -514,7 +506,7 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setInt(5, patientId);
 			procedureCall.setInt(6, id);
 			
-			int affectedRows = procedureCall.executeUpdate();
+			procedureCall.executeUpdate();
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -522,27 +514,63 @@ public class DatabaseManager implements IDatabase {
 	
 	@Override
 	public boolean verifyCredentials(int id, String password) throws DatabaseException {
-		Create the executable SQL statement
-		String call = "{CALL verifyCredentials(?,?)}";
+		//Create the executable SQL statement
+		String call = "{SELECT password, class, name FROM accounts WHERE id=?}";
 		// Sets parameter(s) for stored procedure call
-		CallableStatement procedureCall = connector.prepareCall(call);
-		procedureCall.setInt(1, id);
-		procedureCall.setString(2, password); // MIGHT END UP PRODUCING AN ERROR (MIGHT NEED TO BE setChar())
+		CallableStatement callableStatement;
+		try {
+			callableStatement = connector.prepareCall(call);
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		try {
+			callableStatement.setInt(1, id);
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		//procedureCall.setString(2, password); // MIGHT END UP PRODUCING AN ERROR (MIGHT NEED TO BE setChar())
 		// Executes stored procedure
-		ResultSet resultSet = callableStatement.executeQuery();
-		// Process the result set
-		while (resultSet.next()) {
-			// Retrieve class from database
-			String accountClass = resultSet.getString("class");
+		ResultSet resultSet;
+		try {
+			resultSet = callableStatement.executeQuery();
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
 		}
-		if (accountClass == "patient") {
-			loginClass = LoginClass.PATIENT;
+		byte[] correctHash;
+		LoginClass accountClass;
+		String name;
+		try {
+			if (resultSet.next()) {
+				correctHash = resultSet.getBytes("password");
+				if (resultSet.wasNull()) {
+					return false;
+				}
+				name = resultSet.getString("name");
+				String accountClassStr = resultSet.getString("class");
+				if (accountClassStr.equals("patient")) {
+					accountClass = LoginClass.PATIENT;
+				} else if (accountClassStr.equals("doctor")) {
+					accountClass = LoginClass.DOCTOR;
+				} else {
+					throw new DatabaseException("Invalid account class: " + accountClassStr);
+				}
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+		
+		byte[] salt = PasswordHasher.getSaltFromHash(correctHash);
+		byte[] hashedPassword = hasher.hashPassword(password, salt);
+		if (Arrays.equals(hashedPassword, correctHash)) {
+			// are the same
+			loginClass = accountClass;
+			loggedInId = id;
+			loggedInName = name;
 			return true;
+		} else {
+			return false;
 		}
-		else if (accountClass == "doctor") {
-			loginClass = LoginClass.DOCTOR;
-			return true;
-		}
-		return true;
 	}
 }

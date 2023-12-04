@@ -13,6 +13,7 @@
 - String `password` field. `BINARY(144)`
 - Date `createTimestamp` field. `DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP`
 - Date `modifyTimestamp` field. `DATETIME(0) NOT NULL ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP`
+- String `name` field. `VARCHAR(50) NOT NULL`
 
 ## `patients` Table
 - String `name` field. `VARCHAR(50) NOT NULL`
