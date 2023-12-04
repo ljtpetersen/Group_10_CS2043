@@ -271,6 +271,7 @@ public class PatientQueryView implements IReversable {
 	private void viewEntry(Integer id) {
 		try {
 			PatientInformation data = manager.getDatabaseManager().queryPatientInformation(id);
+			System.out.println(data.patientId);
 			manager.pushNewNode(new PatientDocumentView(manager, data));
 		} catch(DatabaseException e) {
 			e.display();

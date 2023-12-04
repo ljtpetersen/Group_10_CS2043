@@ -124,9 +124,9 @@ public class DatabaseManager implements IDatabase {
 			if (resultSet.next()) {
 				name = resultSet.getString("name");
 				address = resultSet.getString("address");
-				id = resultSet.getInt("id");
-				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
-				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime();
+				id = patientId;
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime() / 1000;
+				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime() / 1000;
 				dateOfBirthNotLocal = resultSet.getDate("dateOfBirth");
 				dateOfBirth = dateOfBirthNotLocal.toLocalDate();
 				doctorId = resultSet.getInt("doctorId");
@@ -389,8 +389,10 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setInt(7, insuranceCostSharePercentage);
 			procedureCall.setInt(8, insuranceOutOfPocketMaximum);
 			
-			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
+			if (!res.next()) {
+				throw new DatabaseException("Failed to get created patient id.");
+			}
 			return res.getInt("id");
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
@@ -419,7 +421,13 @@ public class DatabaseManager implements IDatabase {
 			
 			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
-			return res.getInt("id");
+			if (!res.next()) {
+				throw new DatabaseException("Failed to get created document id.");
+			}
+			int id = res.getInt("id");
+			PatientInformation info = queryPatientInformation(document.patientId);
+			updatePatient(new PatientInformation(info.patientId, info.fullName, info.address, info.insurance, info.totalMoneyOwed + document.amount, info.dateOfBirth, -1, -1, info.doctorId));
+			return id;
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -445,7 +453,11 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setInt(5, patientId);
 			
 			procedureCall.executeUpdate();
-			return procedureCall.executeQuery().getInt("id");
+			ResultSet res = procedureCall.executeQuery();
+			if (!res.next()) {
+				throw new DatabaseException("Failed to get created patient id.");
+			}
+			return res.getInt("id");
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}

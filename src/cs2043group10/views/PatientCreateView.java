@@ -387,8 +387,12 @@ public class PatientCreateView implements IReversable {
 		
 		if (invalidAccum.isEmpty()) {
 			statusText.setText("");
-			PatientInformation data = new PatientInformation(patientId, fullName, address, insurance, -1, dateOfBirth, -1, -1, manager.getDatabaseManager().getId());
 			try {
+				int owed = 0;
+				if (patientId != -1) {
+					owed = manager.getDatabaseManager().queryPatientInformation(patientId).totalMoneyOwed;
+				}
+				PatientInformation data = new PatientInformation(patientId, fullName, address, insurance, owed, dateOfBirth, -1, -1, manager.getDatabaseManager().getId());
 				if (patientId == -1) {					
 					int id = manager.getDatabaseManager().createPatient(data);
 					patientId = id;

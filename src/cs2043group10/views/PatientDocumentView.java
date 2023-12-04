@@ -39,6 +39,7 @@ public class PatientDocumentView implements IReversable {
 	
 	public PatientDocumentView(IReversableManager manager, int patientId) throws DatabaseException {
 		data = manager.getDatabaseManager().queryPatientInformation(patientId);
+		System.out.println(data.patientId);
 		this.patientId = patientId;
 		this.manager = manager;
 		if (view == null) {
