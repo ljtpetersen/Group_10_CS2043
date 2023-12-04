@@ -408,16 +408,17 @@ public class DatabaseManager implements IDatabase {
 			String description = document.description;
 			String title = document.title;
 			Optional<Integer> amountPaid = document.amountPaid;
-			int amountPaidInt = amountPaid.orElseThrow(() -> new IllegalStateException("Value is not present"));
 			// Create report in patient table with stored procedure
 			String call = "{CALL createTransaction(?,?,?,?,?)}";
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
-			procedureCall.setInt(1, patientId);
-			procedureCall.setString(2, description);
-			procedureCall.setString(3, title);
-			procedureCall.setInt(4, amount);
-			procedureCall.setInt(5, amountPaidInt);
+			procedureCall.setInt(2, patientId);
+			procedureCall.setString(5, description);
+			procedureCall.setString(1, title);
+			procedureCall.setInt(3, amount);
+			if (amountPaid.isPresent()) {
+				procedureCall.setInt(4, amountPaid.get());
+			}
 			
 			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
@@ -447,10 +448,10 @@ public class DatabaseManager implements IDatabase {
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setString(1, title);
-			procedureCall.setString(2, type);
+			procedureCall.setString(5, type);
 			procedureCall.setString(3, body);
 			procedureCall.setString(4, auxiliary);
-			procedureCall.setInt(5, patientId);
+			procedureCall.setInt(2, patientId);
 			
 			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
