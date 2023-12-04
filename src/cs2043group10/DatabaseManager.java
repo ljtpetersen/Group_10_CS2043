@@ -420,7 +420,6 @@ public class DatabaseManager implements IDatabase {
 				procedureCall.setInt(4, amountPaid.get());
 			}
 			
-			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
 			if (!res.next()) {
 				throw new DatabaseException("Failed to get created document id.");
@@ -453,10 +452,9 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setString(4, auxiliary);
 			procedureCall.setInt(2, patientId);
 			
-			procedureCall.executeUpdate();
 			ResultSet res = procedureCall.executeQuery();
 			if (!res.next()) {
-				throw new DatabaseException("Failed to get created patient id.");
+				throw new DatabaseException("Failed to get created document id.");
 			}
 			return res.getInt("id");
 		} catch (SQLException e) {
