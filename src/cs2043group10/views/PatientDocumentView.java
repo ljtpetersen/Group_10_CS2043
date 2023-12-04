@@ -87,7 +87,7 @@ public class PatientDocumentView implements IReversable {
 		dateOfBirthLabel.setText("Date of birth: " + data.dateOfBirth.toString());
 		addressLabel.setText("Address: " + data.address);
 		insuranceStatusLabel.setText("Insurance Information: " + data.insurance.toString());
-		totalMoneyOwedLabel.setText("Total Money Owed: $" + data.totalMoneyOwed);
+		totalMoneyOwedLabel.setText("Total Money Owed: " + (data.totalMoneyOwed < 0 ? "-$" : "$") + (data.totalMoneyOwed < 0 ? -data.totalMoneyOwed / 100.0 : data.totalMoneyOwed / 100.0));
 		idLabel.setText("Id: " + data.patientId);
 		createLabel.setText("Created: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.createTimestamp), TimeZone.getDefault().toZoneId()));
 		modifyLabel.setText("Last Modified: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.modifyTimestamp), TimeZone.getDefault().toZoneId()));

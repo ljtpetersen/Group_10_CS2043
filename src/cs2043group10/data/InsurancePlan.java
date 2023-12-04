@@ -23,4 +23,9 @@ public class InsurancePlan {
 			return accum;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Deductible: $%.2f, Out of pocket maximum: %.2f, Cost share percentage: %d%%", deductible / 100.0, outOfPocketMaximum / 100.0, costSharePercentage);
+	}
 }

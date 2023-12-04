@@ -8,6 +8,7 @@ import cs2043group10.DatabaseException;
 import cs2043group10.IReversable;
 import cs2043group10.IReversableManager;
 import cs2043group10.data.FinancialDocument;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -100,6 +101,7 @@ public class FinancialDocumentView implements IReversable {
         view = new GridPane();
         view.setVgap(10);
         view.setHgap(10);
+        GridPane.setMargin(view, new Insets(4, 4, 4, 4));
 
         titleLabel = new Label("");
         documentIdLabel = new Label("");
@@ -118,7 +120,7 @@ public class FinancialDocumentView implements IReversable {
 		titleLabel.setText("Title: " + data.title);
 		documentIdLabel.setText("Document ID: " + data.documentId);
 		patientIdLabel.setText("Patient ID: " + data.patientId);
-		amountLabel.setText("Amount: $" + data.amount / 100.0);
+		amountLabel.setText("Amount: " + (data.amount < 0 ? "-$" : "$") + (data.amount < 0 ? -data.amount / 100.0 : data.amount / 100.0));
 		descriptionLabel.setText("Description: " + data.description);
 		createdAtLabel.setText("Created At: " + LocalDateTime.ofInstant(Instant.ofEpochSecond(data.createTimestamp), TimeZone.getDefault().toZoneId()));
 		if (data.amountPaid.isPresent()) {

@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -173,8 +174,8 @@ public class DatabaseManager implements IDatabase {
 				body = resultSet.getString("body");
 				auxiliary = resultSet.getString("auxiliary");
 				patientId = resultSet.getInt("patientId");
-				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
-				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime();
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime() / 1000;
+				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime() / 1000;
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
 			}
@@ -190,7 +191,7 @@ public class DatabaseManager implements IDatabase {
 	public FinancialDocument queryFinancialDocument(int documentId) throws DatabaseException {
 		try {
 			// Create the executable SQL statement
-			String call = "{CALL queryFinancialDocument(?)}";
+			String call = "{CALL queryFianancialDocument(?)}";
 			// Sets parameter(s) for stored procedure call
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setInt(1, documentId);
@@ -218,7 +219,7 @@ public class DatabaseManager implements IDatabase {
 					amountPaid = Optional.of(tmp);
 				}
 				description = resultSet.getString("description");
-				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime() / 1000;
 				title = resultSet.getString("title");
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
@@ -341,7 +342,7 @@ public class DatabaseManager implements IDatabase {
 			
 			// Process the result set
 			while (resultSet.next()) {
-				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime() / 1000;
 				title = resultSet.getString("title");
 				documentId = resultSet.getInt("id");
 				amount = resultSet.getLong("amount");
@@ -418,6 +419,8 @@ public class DatabaseManager implements IDatabase {
 			procedureCall.setInt(3, amount);
 			if (amountPaid.isPresent()) {
 				procedureCall.setInt(4, amountPaid.get());
+			} else {
+				procedureCall.setNull(4, Types.INTEGER);
 			}
 			
 			ResultSet res = procedureCall.executeQuery();
@@ -511,11 +514,11 @@ public class DatabaseManager implements IDatabase {
 			// Insert values with stored procedure
 			CallableStatement procedureCall = connector.prepareCall(call);
 			procedureCall.setString(1, title);
-			procedureCall.setString(2, type);
-			procedureCall.setString(3, body);
-			procedureCall.setString(4, auxiliary);
-			procedureCall.setInt(5, patientId);
-			procedureCall.setInt(6, id);
+			procedureCall.setString(6, type);
+			procedureCall.setString(4, body);
+			procedureCall.setString(5, auxiliary);
+			procedureCall.setInt(3, patientId);
+			procedureCall.setInt(2, id);
 			
 			procedureCall.executeUpdate();
 		} catch (SQLException e) {
