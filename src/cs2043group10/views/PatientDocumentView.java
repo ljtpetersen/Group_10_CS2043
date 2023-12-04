@@ -32,7 +32,26 @@ public class PatientDocumentView implements IReversable {
 	}
 	
 	private static void createView() {
-		// TODO
+	view = new GridPane();
+        view.setPadding(new Insets(10));
+        view.setHgap(10);
+        view.setVgap(5);
+
+        
+        Label patientNameLabel = new Label("Patient Name: " + data.getPatientName());
+        Label dateOfBirthLabel = new Label("Date of Birth: " + data.getDateOfBirth());
+        Label addressLabel = new Label("Address: " + data.getAddress());
+        Label medicalHistoryLabel = new Label("Medical History: " + data.getMedicalHistory());
+        Label insuranceStatusLabel = new Label("Insurance Status: " + data.getInsuranceStatus());
+
+       
+        view.addRow(0, patientNameLabel);
+        view.addRow(1, dateOfBirthLabel);
+        view.addRow(2, addressLabel);
+        view.addRow(3, medicalHistoryLabel);
+        view.addRow(4, insuranceStatusLabel);
+    }
+}
 	}
 
 	@Override
