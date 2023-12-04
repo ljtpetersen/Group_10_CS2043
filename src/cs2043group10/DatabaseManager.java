@@ -119,8 +119,8 @@ public class DatabaseManager implements IDatabase {
 				name = resultSet.getString("name");
 				address = resultSet.getString("address");
 				id = resultSet.getInt("id");
-				createTimeStamp = resultSet.getLong("createTimestamp");
-				modifyTimeStamp = resultSet.getLong("modifyTimestamp");
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
+				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime();
 				dateOfBirthNotLocal = resultSet.getDate("dateOfBirth");
 				dateOfBirth = dateOfBirthNotLocal.toLocalDate();
 				doctorId = resultSet.getInt("doctorId");
@@ -167,8 +167,8 @@ public class DatabaseManager implements IDatabase {
 				body = resultSet.getString("body");
 				auxiliary = resultSet.getString("auxiliary");
 				patientId = resultSet.getInt("patientId");
-				createTimeStamp = resultSet.getLong("createTimestamp");
-				modifyTimeStamp = resultSet.getLong("modifyTimestamp");
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
+				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime();
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
 			}
@@ -212,7 +212,7 @@ public class DatabaseManager implements IDatabase {
 					amountPaid = Optional.of(tmp);
 				}
 				description = resultSet.getString("description");
-				createTimeStamp = resultSet.getLong("createTimestamp");
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
 				title = resultSet.getString("title");
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
@@ -248,7 +248,7 @@ public class DatabaseManager implements IDatabase {
 			ArrayList<PatientEntry> patientList = new ArrayList<>();
 			
 			// Process the result set
-			if (resultSet.next()) {
+			while (resultSet.next()) {
 				name = resultSet.getString("name");
 				address = resultSet.getString("address");
 				id = resultSet.getInt("id");
@@ -256,8 +256,6 @@ public class DatabaseManager implements IDatabase {
 				dateOfBirth = dateOfBirthNotLocal.toLocalDate();
 				PatientEntry patientEntry = new PatientEntry(name, id, dateOfBirth, address);
 				patientList.add(patientEntry);
-			} else {
-				throw new DatabaseException("No patients under doctor with id " + doctorId);
 			}
 			// Convert ArrayList to array
 			PatientEntry[] patientsArray = patientList.toArray(new PatientEntry[0]);
@@ -293,16 +291,14 @@ public class DatabaseManager implements IDatabase {
 			ArrayList<MedicalEntry> reportList = new ArrayList<>();
 			
 			// Process the result set
-			if (resultSet.next()) {
-				createTimeStamp = resultSet.getLong("createTimestamp");
-				modifyTimeStamp = resultSet.getLong("modifyTimestamp");
+			while (resultSet.next()) {
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime() / 1000;
+				modifyTimeStamp = resultSet.getTimestamp("modifyTimestamp").getTime() / 1000;
 				title = resultSet.getString("title");
 				type = resultSet.getString("type");
 				documentId = resultSet.getInt("id");
 				MedicalEntry medicalEntry = new MedicalEntry(createTimeStamp, modifyTimeStamp, title, type, documentId);
 				reportList.add(medicalEntry);
-			} else {
-				throw new DatabaseException("No reports under patient with id " + patientId);
 			}
 			
 			// Convert ArrayList to array
@@ -338,15 +334,13 @@ public class DatabaseManager implements IDatabase {
 			ArrayList<FinancialEntry> transactionList = new ArrayList<>();
 			
 			// Process the result set
-			if (resultSet.next()) {
-				createTimeStamp = resultSet.getLong("createTimestamp");
+			while (resultSet.next()) {
+				createTimeStamp = resultSet.getTimestamp("createTimestamp").getTime();
 				title = resultSet.getString("title");
 				documentId = resultSet.getInt("id");
 				amount = resultSet.getLong("amount");
 				FinancialEntry financialEntry = new FinancialEntry(title, createTimeStamp, amount, documentId);
 				transactionList.add(financialEntry);
-			} else {
-				throw new DatabaseException("No transactions under patient with id " + patientId);
 			}
 			
 			// Convert ArrayList to array
