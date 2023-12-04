@@ -1,64 +1,82 @@
 Stored Procedures List
-
 verifyCredentials:
 CREATE PROCEDURE verifyCredentials(IN id int(11), IN password char(100))
-    -> BEGIN
-    -> SELECT class
-    -> FROM accounts
-    -> WHERE id = id AND password = password;
-    -> END //
-
+   -> BEGIN
+   -> SELECT class
+   -> FROM accounts
+   -> WHERE id = id AND password = password;
+   -> END //
 queryPatientInformation:
-CREATE PROCEDURE queryPatientInformation(IN id int(11)) 
-    -> BEGIN
-    -> SELECT *
-    -> FROM patients
-    -> WHERE id = id;
-    -> END //
-
+CREATE PROCEDURE queryPatientInformation(IN id int(11))
+   -> BEGIN
+   -> SELECT *
+   -> FROM patients
+   -> WHERE id = id;
+   -> END //
 queryMedicalDocument:
 CREATE PROCEDURE queryMedicalDocument(IN id int(11)) BEGIN SELECT * FROM report WHERE id = id; END//
-
 queryFinancialDocument:
 CREATE PROCEDURE queryFianancialDocument(IN id int(11)) BEGIN SELECT * FROM transactions WHERE id = id; END//
-
 createPatient:
 CREATE PROCEDURE createPatient(
-    -> IN name VARCHAR(50),
-    -> IN address VARCHAR(75),
-    -> IN id INT(11),
-    -> IN dateOfBirth DATE,
-    -> IN doctorId INT(11),
-    -> IN totalAmountDue INT(11),
-    -> IN insuranceDeductible INT(11),
-    -> IN insuranceCostSharePercentage DECIMAL(10,0),
-    -> IN insuranceOutOfPocketMaximum INT(11)
-    -> )
-    -> BEGIN
-    -> INSERT INTO patients (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum)
-    -> VALUES (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum);
-    -> END //
-
+   -> IN name VARCHAR(50),
+   -> IN address VARCHAR(75),
+   -> IN id INT(11),
+   -> IN dateOfBirth DATE,
+   -> IN doctorId INT(11),
+   -> IN totalAmountDue INT(11),
+   -> IN insuranceDeductible INT(11),
+   -> IN insuranceCostSharePercentage DECIMAL(10,0),
+   -> IN insuranceOutOfPocketMaximum INT(11)
+   -> )
+   -> BEGIN
+   -> INSERT INTO patients (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum)
+   -> VALUES (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum);
+   -> END //
 queryPatientsUnderDoctor:
 CREATE PROCEDURE queryPatientsUnderDoctor(
-    -> IN doctorId INT(11)
-    -> )
-    -> BEGIN
-    -> SELECT name, address, id, dateOfBirth
-    -> FROM patients
-    -> WHERE doctorId = doctorId;
-    -> END //
-    
+   -> IN doctorId INT(11)
+   -> )
+   -> BEGIN
+   -> SELECT name, address, id, dateOfBirth
+   -> FROM patients
+   -> WHERE doctorId = doctorId;
+   -> END //
+  
 queryMedicalDocumentsUnderPatient:
 CREATE PROCEDURE queryMedicalDocumentsUnderPatient(  IN patientId INT(11) ) BEGIN SELECT createTimeStamp, modifyTimeStamp, title, type, id FROM report WHERE patientId = patientId; END//
-
 queryFinancialDocumentsUnderPatient:
-CREATE PROCEDURE queryFinancialDocumentsUnderPatient( 
-    -> IN patientId INT(11)
-    -> )
-    -> BEGIN
-    -> SELECT createTimeStamp, title, id, amount
-    -> FROM transactions
-    -> WHERE patientId = patientId;
-    -> END //
+CREATE PROCEDURE queryFinancialDocumentsUnderPatient(
+   -> IN patientId INT(11)
+   -> )
+   -> BEGIN
+   -> SELECT createTimeStamp, title, id, amount
+   -> FROM transactions
+   -> WHERE patientId = patientId;
+   -> END //
+createPatient:
+CREATE PROCEDURE createPatient
+   -> ( IN name varchar(50),
+   -> IN address varchar(75),
+   -> IN id int(11),
+   -> IN dateOfBirth date,
+   -> IN doctorId int(11),
+   -> IN totalAmountDue int(11),
+   -> IN insuranceDeductibile int(11),
+   -> IN insuranceCostSharePercentage decimal(10, 0),
+   -> IN OutOfPocketMaximum int(11))
+   -> BEGIN
+   -> INSERT INTO patients (name, address, id, dateofBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePercentage, insuranceOutOfPocketMaximum) VALUES (name, address, id, dateofBirth, doctorId, totalAmountDue, insuranceDeductibile, insuranceCostSharePercentage, insuranceOutOfPocketMaximum);
+   -> END //
+  
+createTransaction:
+CREATE PROCEDURE createTransaction ( IN title varchar(50), IN id int(11), IN patientId int(11), IN amount int(11), IN amountPaid int(11), IN description text)  BEGIN INSERT INTO patients (patientid, description, title, i
+d, amount, amountPaid) VALUES (patientid, description, title, id, amount, amountPaid); END//
+createReport:
+CREATE PROCEDURE createReport ( IN title varchar(50), IN id int(11), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN INSERT INTO patients (title, type, body, auxiliary, patientId, id) VALUES (title, type, body, auxiliary, patientId, id); END//
+updatePatient:
+CREATE PROCEDURE updatePatient ( IN name varchar(50), IN address varchar(75), IN id int(11), IN dateOfBirth date, IN doctorId int(11), IN totalAmountDue int(11), IN insuranceDeductibile int(11), IN insuranceCostSharePercentage decimal(10, 0), IN OutOfPocketMaximum int(11)) BEGIN UPDATE patients SET name = name, address = address, dateofBirth = dateOfBirth, doctorId = doctorId, totalAmountDue = totalAmountDue, insuranceDeductible = insuranceDeductible, insuranceCostSharePercentage = insuranceCostSharePercentage, insuranceOutOfPocketMaximum = insuranceOutOfPocketMaximum WHERE id = id; END//
+updateReport:
+CREATE PROCEDURE updateReport ( IN title varchar(50), IN id int(11), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN UPDATE report SET title = title, type = type, body = body, auxiliary
+= auxiliary, patientId = patientId WHERE id = id; END//
 
