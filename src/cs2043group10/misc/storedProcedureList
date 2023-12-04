@@ -31,8 +31,8 @@ CREATE PROCEDURE createPatient(
    -> BEGIN
    -> INSERT INTO accounts (name, class)
    -> VALUES (name, "patient");
-   -> INSERT INTO patients (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum)
-   -> VALUES (name, address, LAST_INSERT_ID(), dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePerecentage, insuranceOutOfPocketMaximum);
+   -> INSERT INTO patients (name, address, id, dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePercentage, insuranceOutOfPocketMaximum)
+   -> VALUES (name, address, LAST_INSERT_ID(), dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePercentage, insuranceOutOfPocketMaximum);
    -> SELECT id FROM accounts WHERE id=LAST_INSERT_ID();
    -> END //
 queryPatientsUnderDoctor:

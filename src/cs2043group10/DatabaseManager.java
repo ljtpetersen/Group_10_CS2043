@@ -14,10 +14,12 @@ import cs2043group10.misc.PasswordHasher;
 import cs2043group10.data.IQuery;
 import cs2043group10.data.InsurancePlan;
 import java.util.Optional;
+
 import java.sql.Date;
 // Imports required for connecting to the database
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.sql.CallableStatement;
@@ -513,11 +515,12 @@ public class DatabaseManager implements IDatabase {
 	@Override
 	public boolean verifyCredentials(int id, String password) throws DatabaseException {
 		//Create the executable SQL statement
-		String call = "{SELECT password, class, name FROM accounts WHERE id=?}";
+		String call = "SELECT password, class, name FROM accounts WHERE id=?";
 		// Sets parameter(s) for stored procedure call
-		CallableStatement callableStatement;
+		PreparedStatement callableStatement;
 		try {
-			callableStatement = connector.prepareCall(call);
+			callableStatement = connector.prepareStatement(call);
+			//callableStatement = connector.prepareCall(call);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
