@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>250</x>
+      <y>250</y>
+      <w>620</w>
+      <h>530</h>
+    </coordinates>
+    <panel_attributes>cs2043group10.data
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>640</x>
+      <y>500</y>
+      <w>220</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>FinancialDocument
+--
++ documentId: int
++ patientId: int
++ amount: int
++ amountPaid: Optional&lt;Integer&gt;
++ description: String
++ title: String
++ createTimestamp: long
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>260</x>
+      <y>280</y>
+      <w>190</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IQuery&lt;T&gt;
+--
++ get(int): T
++ getEntryCount(): int
++ getEntries(): Collection&lt;T&gt;
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>510</x>
+      <y>360</y>
+      <w>290</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>FinancialQuery
+--
++ patientId: int
+- entries: HashMap&lt;Integer, FinancialEntry&gt;
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>510</x>
+      <y>280</y>
+      <w>290</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>MedicalQuery
+--
++ patientId: int
++ entries: HashMap&lt;Integer, MedicalEntry&gt;
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>510</x>
+      <y>440</y>
+      <w>290</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>PatientQuery
+--
+- patients: HashMap&lt;Integer, PatientEntry&gt;
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>280</y>
+      <w>90</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>300</y>
+      <w>90</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;70.0;70.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>440</x>
+      <y>320</y>
+      <w>90</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;30.0;10.0;30.0;130.0;70.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>260</x>
+      <y>390</y>
+      <w>130</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+LoginClass
+--
+PATIENT
+DOCTOR
+NOT_LOGGED_IN
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>500</y>
+      <w>170</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>MedicalDocument
+--
++ title: String
++ type: String
++ body: String
++ auxiliary: String
++ patientId: int
++ documentId: int
++ createTimestamp: long
++ modifyTimestamp: long
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>260</x>
+      <y>500</y>
+      <w>180</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>PatientInformation
+--
++ totalMoneyOwed: int
++ fullName: String
++ address: String
++ insurance: InsurancePlan
++ patientId: int
++ dateOfBirth: LocalDate
++ createTimestamp: long
++ modifyTimestamp: long
++ doctorId: int
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>330</x>
+      <y>690</y>
+      <w>190</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>InsurancePlan
+--
++ deductible: int
++ outOfPocketMaximum: int
++ costSharePercentage: int
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>670</y>
+      <w>70</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;50.0;70.0</additional_attributes>
+  </element>
+</diagram>

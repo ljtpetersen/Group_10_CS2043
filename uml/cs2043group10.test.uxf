@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>320</x>
+      <y>770</y>
+      <w>150</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>PasswordHasherCLI
+--
++ main(String[]): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>310</x>
+      <y>550</y>
+      <w>470</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>cs2043group10.test
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>320</x>
+      <y>580</y>
+      <w>450</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>TestDatabaseManager
+--
+- loggedInId: int
+- loggedInName: String
+- loginClass: LoginClass
+- manager: IReversableManager
+- patients: ArrayList&lt;PatientInformation&gt;
+- medicalDocumentsP: ArrayList&lt;ArrayList&lt;MedicalDocument&gt; &gt;
+- financialDocumentsP: ArrayList&lt;ArrayList&lt;FinancialDocument&gt; &gt;
+- medicalDocuments: ArrayList&lt;MedicalDocument&gt;
+- financialDocument: ArrayList&lt;FinancialDocument&gt;
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>550</x>
+      <y>430</y>
+      <w>120</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>cs2043group10
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>460</y>
+      <w>100</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IDatabase
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>500</y>
+      <w>30</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+</diagram>

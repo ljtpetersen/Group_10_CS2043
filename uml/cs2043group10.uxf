@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>216</x>
+      <y>45</y>
+      <w>774</w>
+      <h>720</h>
+    </coordinates>
+    <panel_attributes>cs2043group10
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>225</x>
+      <y>72</y>
+      <w>207</w>
+      <h>261</h>
+    </coordinates>
+    <panel_attributes>Main
+--
+- nodeStack: Vector&lt;IReversable&gt;
+- currentNodeIndex: int
+- primaryPane: GridPane
+- backwardsButton: Button
+- forwardsButton: Button
+- homeButton: Button
+- logoutButton: Button
+- currentNodeTitle: Text
+- auxiliaryText: Text
+- databaseManager: IDatabase
+- loginPrompt: IReversable
+--
+- login(): void
+- logoutEvent(ActionEvent): void
+- homeEvent(ActionEvent): void
+- historyEvent(ActionEvent): void
+- refreshEvent(ActionEvent): void
+bg=WHITE</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>72</x>
+      <y>99</y>
+      <w>90</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+Application
+bg=WHITE</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>54</x>
+      <y>72</y>
+      <w>126</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>javafx.application
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>153</x>
+      <y>108</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>495</x>
+      <y>72</y>
+      <w>216</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IReversableManager
+--
++ pushNewNode(IReversable): void
++ getDatabaseManager(): IDatabase
++ goBackwards(): void
++ goForwards(): void
++ popNode(): void
++ replaceTop(IReversable): void
++ isAtTop(IReversable): boolean
++ refresh(): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>423</x>
+      <y>108</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>495</x>
+      <y>243</y>
+      <w>126</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IReversable
+--
++ beforeShow(): void
++ afterShow(): void
++ beforeHide(): void
++ afterHide(): void
++ getNode(): Node
++ getTitle(): String
++ destroy(): void
++ refresh(): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>423</x>
+      <y>279</y>
+      <w>90</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>225</x>
+      <y>459</y>
+      <w>495</w>
+      <h>261</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IDatabase
+--
++ tryLogin(int, String): LoginClass
++ getLoginClass(): LoginClass
++ getId(): int
++ getName(): String
++ logout(): void
++ instantiateHomeView(): IReversable
++ queryPatientInformation(int): PatientInformation
++ queryMedicalDocument(int): MedicalDocument
++ queryFinancialDocument(int): FinancialDocument
++ queryPatientsUnderDoctor(int): IQuery&lt;PatientQuery.PatientEntry&gt;
++ queryMedicalDocumentsUnderPatient(int): IQuery&lt;MedicalQuery.MedicalEntry&gt;
++ queryFinancialDocumentsUnderPatient(int): IQuery&lt;FinancialQuery.FinancialEntry&gt;
++ updatePatient(PatientInformation): void
++ updateMedicalDocument(MedicalDocument): void
++ verifyCredentials(int, String): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>324</x>
+      <y>324</y>
+      <w>27</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>765</x>
+      <y>468</y>
+      <w>198</w>
+      <h>117</h>
+    </coordinates>
+    <panel_attributes>DatabaseManager
+--
+- loggedInId: int
+- loggedInName: String
+- loginClass: LoginClass
+- manager: IReversableManager
+- hasher: PasswordHasher
+- connector: Connection
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>711</x>
+      <y>495</y>
+      <w>72</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>765</x>
+      <y>666</y>
+      <w>144</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>DatabaseException
+--
+- serialVersionUID: long
+--
++ display(): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>765</x>
+      <y>603</y>
+      <w>189</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>The DatabaseException class
+is the exception type thrown
+from all IDatabase methods.
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>693</x>
+      <y>288</y>
+      <w>198</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>LoginPrompt
+--
+- manager: IReversableManager
+- loginMethod: Runnable
+- idField: TextField
+- passwordField: PasswordField
+- loginNode: VBox
+- message: Text
+- loginButton: Button
+--
+- createNode(): void
+- loginEvent(ActionEvent): void
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>612</x>
+      <y>306</y>
+      <w>99</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>396</x>
+      <y>324</y>
+      <w>315</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0;330.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>549</x>
+      <y>801</y>
+      <w>144</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>cs2043group10.data
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>567</x>
+      <y>828</y>
+      <w>108</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+LoginClass
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>711</x>
+      <y>684</y>
+      <w>72</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;20.0;60.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>666</x>
+      <y>540</y>
+      <w>351</w>
+      <h>333</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>330.0;10.0;370.0;10.0;370.0;280.0;50.0;280.0;50.0;350.0;10.0;350.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>738</x>
+      <y>819</y>
+      <w>153</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>cs2043group10.misc
+--
+bg=orange
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>756</x>
+      <y>846</y>
+      <w>117</w>
+      <h>27</h>
+    </coordinates>
+    <panel_attributes>PasswordHasher
+bg=white</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>882</x>
+      <y>513</y>
+      <w>162</w>
+      <h>369</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>90.0;10.0;160.0;10.0;160.0;390.0;10.0;390.0</additional_attributes>
+  </element>
+</diagram>
