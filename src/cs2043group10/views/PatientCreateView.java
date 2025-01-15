@@ -1,15 +1,15 @@
 package cs2043group10.views;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 import cs2043group10.DatabaseException;
 import cs2043group10.IReversable;
 import cs2043group10.IReversableManager;
 import cs2043group10.data.InsurancePlan;
+import cs2043group10.data.LoginClass;
 import cs2043group10.data.PatientInformation;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -97,6 +97,10 @@ public class PatientCreateView implements IReversable {
 	 * This is the status text upon which error messages are displayed.
 	 */
 	private static Text statusText;
+	/**
+	 * This is the doctor id of the patient. If it is -1, then there is no associated doctor id.
+	 */
+	private int doctorId = -1;
 	
 	/**
 	 * Initialize a new patient create view with no patient information.
@@ -121,6 +125,7 @@ public class PatientCreateView implements IReversable {
 		insurance = data.insurance;
 		dateOfBirth = data.dateOfBirth;
 		patientId = data.patientId;
+		doctorId = data.doctorId;
 		this.manager = manager;
 		if (view == null) {
 			createView();
@@ -165,30 +170,21 @@ public class PatientCreateView implements IReversable {
 		insuranceOutOfPocketMaximum.setPromptText("Out of Pocket Maximum");
 		insuranceCostSharePercentage = new TextField();
 		insuranceCostSharePercentage.setPromptText("Cost Share Percentage");
-		insuranceDeductibleField.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!newValue.matches("[0-9.]*")) {
-					insuranceDeductibleField.setText(newValue.replaceAll("[^0-9.]", ""));
-				}
-			}
-		});
-		insuranceCostSharePercentage.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!newValue.matches("[0-9.]*")) {
-					insuranceCostSharePercentage.setText(newValue.replaceAll("[^0-9.]", ""));
-				}
-			}
-		});
-		insuranceOutOfPocketMaximum.textProperty().addListener(new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (!newValue.matches("[0-9.]*")) {
-					insuranceOutOfPocketMaximum.setText(newValue.replaceAll("[^0-9.]", ""));
-				}
-			}
-		});
+		insuranceDeductibleField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9.]*")) {
+                insuranceDeductibleField.setText(newValue.replaceAll("[^0-9.]", ""));
+            }
+        });
+		insuranceCostSharePercentage.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9.]*")) {
+                insuranceCostSharePercentage.setText(newValue.replaceAll("[^0-9.]", ""));
+            }
+        });
+		insuranceOutOfPocketMaximum.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("[0-9.]*")) {
+                insuranceOutOfPocketMaximum.setText(newValue.replaceAll("[^0-9.]", ""));
+            }
+        });
 		
 		insuranceDeductibleField.setMinWidth(300);
 		insuranceOutOfPocketMaximum.setMinWidth(300);
@@ -228,16 +224,8 @@ public class PatientCreateView implements IReversable {
 
 	@Override
 	public void beforeShow() {
-		if (fullName == null) {
-			nameField.setText("");
-		} else {
-			nameField.setText(fullName);
-		}
-		if (address == null) {
-			addressField.setText("");
-		} else {
-			addressField.setText(address);
-		}
+        nameField.setText(Objects.requireNonNullElse(fullName, ""));
+        addressField.setText(Objects.requireNonNullElse(address, ""));
 		if (patientId == -1) {
 			id.setText("None");
 		} else {
@@ -392,10 +380,17 @@ public class PatientCreateView implements IReversable {
 				if (patientId != -1) {
 					owed = manager.getDatabaseManager().queryPatientInformation(patientId).totalMoneyOwed;
 				}
-				PatientInformation data = new PatientInformation(patientId, fullName, address, insurance, owed, dateOfBirth, -1, -1, manager.getDatabaseManager().getId());
-				if (patientId == -1) {					
-					int id = manager.getDatabaseManager().createPatient(data);
-					patientId = id;
+				int passedDoctorId = doctorId;
+				if (passedDoctorId == -1) {
+					if (manager.getDatabaseManager().getLoginClass() != LoginClass.DOCTOR) {
+						throw new DatabaseException("Tried to save patient w/o doctor id but not logged in as doctor.");
+					} else {
+						passedDoctorId = manager.getDatabaseManager().getId();
+					}
+				}
+				PatientInformation data = new PatientInformation(patientId, fullName, address, insurance, owed, dateOfBirth, -1, -1, passedDoctorId);
+				if (patientId == -1) {
+                    patientId = manager.getDatabaseManager().createPatient(data);
 					PatientCreateView.id.setText(Integer.toString(patientId));
 				} else {
 					manager.getDatabaseManager().updatePatient(data);

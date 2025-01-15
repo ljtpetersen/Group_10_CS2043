@@ -46,17 +46,15 @@ public class DatabaseManager implements IDatabase {
 		} catch (NoSuchAlgorithmException e) {
 			throw new DatabaseException(e);
 		}
-		
-		try
-       {   // Connect to the database
-           connector = DriverManager.getConnection
-                  ("jdbc:mysql://cs1103.cs.unb.ca:3306/iyoung",  // Database URL
-                   "iyoung",   // MySQL username
-                   "2RMFsZG2");  // MySQL password
-       }	
-		catch(SQLException e)
-       {   throw new DatabaseException(e);
-       }
+
+		try {
+			connector = DriverManager.getConnection
+					("jdbc:mysql://localhost/cs2043",  // Database URL
+							"cs2043",   // MySQL username
+							"cs2043");  // MySQL password
+		} catch(SQLException e) {
+			throw new DatabaseException(e);
+		}
 	}
 	
 	@Override
@@ -112,8 +110,8 @@ public class DatabaseManager implements IDatabase {
 			String name;
 			String address;
 			int id;
-			Long createTimeStamp;
-			Long modifyTimeStamp;
+			long createTimeStamp;
+			long modifyTimeStamp;
 			LocalDate dateOfBirth;
 			Date dateOfBirthNotLocal;
 			int doctorId;
@@ -140,8 +138,7 @@ public class DatabaseManager implements IDatabase {
 			}
 			
 			InsurancePlan insurance = new InsurancePlan(insuranceDeductible, insuranceOutOfPocketMaximum, insuranceCostSharePercentage);
-			PatientInformation patientInformation = new PatientInformation(id, name, address, insurance, totalAmountDue, dateOfBirth, createTimeStamp, modifyTimeStamp, doctorId);
-			return patientInformation;
+            return new PatientInformation(id, name, address, insurance, totalAmountDue, dateOfBirth, createTimeStamp, modifyTimeStamp, doctorId);
 		} catch (SQLException e)
 		{	throw new DatabaseException(e);
 		}
@@ -164,8 +161,8 @@ public class DatabaseManager implements IDatabase {
 			String body;
 			String auxiliary;
 			int patientId;
-			Long createTimeStamp;
-			Long modifyTimeStamp;
+			long createTimeStamp;
+			long modifyTimeStamp;
 			// Process the result set
 			if (resultSet.next()) {
 				// Retrieve columns from database
@@ -179,9 +176,8 @@ public class DatabaseManager implements IDatabase {
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
 			}
-			MedicalDocument medicalDocument = new MedicalDocument(documentId, title, type, body, auxiliary, patientId, modifyTimeStamp, createTimeStamp);
-			
-			return medicalDocument;
+
+            return new MedicalDocument(documentId, title, type, body, auxiliary, patientId, modifyTimeStamp, createTimeStamp);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -203,7 +199,7 @@ public class DatabaseManager implements IDatabase {
 			int amount;
 			Optional<Integer> amountPaid;
 			String description;
-			Long createTimeStamp;
+			long createTimeStamp;
 			String title;
 			
 			// Process the result set
@@ -224,8 +220,7 @@ public class DatabaseManager implements IDatabase {
 			} else {
 				throw new DatabaseException("No document with id " + documentId);
 			}
-			FinancialDocument financialDocument = new FinancialDocument(id, patientId, amount, description, createTimeStamp, title, amountPaid);
-			return financialDocument;
+            return new FinancialDocument(id, patientId, amount, description, createTimeStamp, title, amountPaid);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -266,9 +261,8 @@ public class DatabaseManager implements IDatabase {
 			}
 			// Convert ArrayList to array
 			PatientEntry[] patientsArray = patientList.toArray(new PatientEntry[0]);
-			
-			PatientQuery patientsUnderDoctor = new PatientQuery(patientsArray);
-			return patientsUnderDoctor;
+
+            return new PatientQuery(patientsArray);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -310,9 +304,8 @@ public class DatabaseManager implements IDatabase {
 			
 			// Convert ArrayList to array
 			MedicalEntry[] reportsArray = reportList.toArray(new MedicalEntry[0]);
-			
-			MedicalQuery reportsUnderPatient = new MedicalQuery(patientId, reportsArray);
-			return reportsUnderPatient;
+
+            return new MedicalQuery(patientId, reportsArray);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}
@@ -352,9 +345,8 @@ public class DatabaseManager implements IDatabase {
 			
 			// Convert ArrayList to array
 			FinancialEntry[] transactionsArray = transactionList.toArray(new FinancialEntry[0]);
-			
-			FinancialQuery transactionsUnderPatient = new FinancialQuery(patientId, transactionsArray);
-			return transactionsUnderPatient;
+
+            return new FinancialQuery(patientId, transactionsArray);
 		} catch (SQLException e) {
 			throw new DatabaseException(e);
 		}

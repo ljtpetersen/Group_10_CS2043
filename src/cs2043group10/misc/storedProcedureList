@@ -1,12 +1,12 @@
-CREATE OR REPLACE PROCEDURE queryPatientInformation(IN idIn int(11))
+CREATE PROCEDURE queryPatientInformation(IN idIn int(11))
     BEGIN
     SELECT *
     FROM patients
     WHERE id = idIn;
     END //
-CREATE OR REPLACE PROCEDURE queryMedicalDocument(IN idIn int(11)) BEGIN SELECT * FROM report WHERE id = idIn; END//
-CREATE OR REPLACE PROCEDURE queryFianancialDocument(IN idIn int(11)) BEGIN SELECT * FROM transactions WHERE id = idIn; END//
-CREATE OR REPLACE PROCEDURE createPatient(
+CREATE PROCEDURE queryMedicalDocument(IN idIn int(11)) BEGIN SELECT * FROM report WHERE id = idIn; END//
+CREATE PROCEDURE queryFianancialDocument(IN idIn int(11)) BEGIN SELECT * FROM transactions WHERE id = idIn; END//
+CREATE PROCEDURE createPatient(
     IN name VARCHAR(50),
     IN address VARCHAR(75),
     IN dateOfBirth DATE,
@@ -23,7 +23,7 @@ CREATE OR REPLACE PROCEDURE createPatient(
     VALUES (name, address, LAST_INSERT_ID(), dateOfBirth, doctorId, totalAmountDue, insuranceDeductible, insuranceCostSharePercentage, insuranceOutOfPocketMaximum);
     SELECT id FROM accounts WHERE id=LAST_INSERT_ID();
     END //
-CREATE OR REPLACE PROCEDURE queryPatientsUnderDoctor(
+CREATE PROCEDURE queryPatientsUnderDoctor(
     IN doctorIdIn INT(11)
     )
     BEGIN
@@ -32,8 +32,8 @@ CREATE OR REPLACE PROCEDURE queryPatientsUnderDoctor(
     WHERE doctorId = doctorIdIn;
     END //
   
-CREATE OR REPLACE PROCEDURE queryMedicalDocumentsUnderPatient(  IN patientIdIn INT(11) ) BEGIN SELECT createTimeStamp, modifyTimeStamp, title, type, id FROM report WHERE patientId = patientIdIn; END//
-CREATE OR REPLACE PROCEDURE queryFinancialDocumentsUnderPatient(
+CREATE PROCEDURE queryMedicalDocumentsUnderPatient(  IN patientIdIn INT(11) ) BEGIN SELECT createTimeStamp, modifyTimeStamp, title, type, id FROM report WHERE patientId = patientIdIn; END//
+CREATE PROCEDURE queryFinancialDocumentsUnderPatient(
     IN patientIdIn INT(11)
     )
     BEGIN
@@ -42,9 +42,17 @@ CREATE OR REPLACE PROCEDURE queryFinancialDocumentsUnderPatient(
     WHERE patientId = patientIdIn;
     END //
 
-CREATE OR REPLACE PROCEDURE createTransaction ( IN title varchar(50), IN patientId int(11), IN amount int(11), IN amountPaid int(11), IN description text)  BEGIN INSERT INTO transactions (patientid, description, title, amount, amountPaid) VALUES (patientid, description, title, amount, amountPaid); SELECT id FROM transactions WHERE id=LAST_INSERT_ID(); END//
-CREATE OR REPLACE PROCEDURE createReport ( IN title varchar(50), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN INSERT INTO report (title, type, body, auxiliary, patientId) VALUES (title, type, body, auxiliary, patientId); SELECT id FROM report WHERE id=LAST_INSERT_ID(); END//
-CREATE OR REPLACE PROCEDURE updatePatient ( IN name varchar(50), IN address varchar(75), IN idIn int(11), IN dateOfBirth date, IN doctorId int(11), IN totalAmountDue int(11), IN insuranceDeductibile int(11), IN insuranceCostSharePercentage decimal(10, 0), IN OutOfPocketMaximum int(11)) BEGIN UPDATE patients SET name = name, address = address, dateofBirth = dateOfBirth, doctorId = doctorId, totalAmountDue = totalAmountDue, insuranceDeductible = insuranceDeductible, insuranceCostSharePercentage = insuranceCostSharePercentage, insuranceOutOfPocketMaximum = insuranceOutOfPocketMaximum WHERE id = idIn; END//
-CREATE OR REPLACE PROCEDURE updateReport ( IN title varchar(50), IN idIn int(11), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN UPDATE report SET title = title, type = type, body = body, auxiliary
+CREATE PROCEDURE createTransaction ( IN title varchar(50), IN patientId int(11), IN amount int(11), IN amountPaid int(11), IN description text)  BEGIN INSERT INTO transactions (patientid, description, title, amount, amountPaid) VALUES (patientid, description, title, amount, amountPaid); SELECT id FROM transactions WHERE id=LAST_INSERT_ID(); END//
+CREATE PROCEDURE createReport ( IN title varchar(50), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN INSERT INTO report (title, type, body, auxiliary, patientId) VALUES (title, type, body, auxiliary, patientId); SELECT id FROM report WHERE id=LAST_INSERT_ID(); END//
+CREATE PROCEDURE updatePatient ( IN name varchar(50), IN address varchar(75), IN idIn int(11), IN dateOfBirth date, IN doctorId int(11), IN totalAmountDue int(11), IN insuranceDeductibile int(11), IN insuranceCostSharePercentage decimal(10, 0), IN OutOfPocketMaximum int(11))
+BEGIN UPDATE patients SET name = name,
+address = address,
+dateOfBirth = dateOfBirth,
+doctorId = doctorId,
+totalAmountDue = totalAmountDue,
+insuranceDeductible = insuranceDeductible,
+insuranceCostSharePercentage = insuranceCostSharePercentage,
+insuranceOutOfPocketMaximum = insuranceOutOfPocketMaximum WHERE id = idIn; END//
+CREATE PROCEDURE updateReport ( IN title varchar(50), IN idIn int(11), IN patientId int(11), IN body text, IN auxiliary text, IN type varchar(20))  BEGIN UPDATE report SET title = title, type = type, body = body, auxiliary
 = auxiliary, patientId = patientId WHERE id = idIn; END//
 
